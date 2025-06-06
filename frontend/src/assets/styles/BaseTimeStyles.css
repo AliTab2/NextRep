@@ -1,0 +1,60 @@
+.base-time-hour,
+.base-time-minute {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label */
+.base-label {
+  margin-bottom: var(--space-xs);
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--color-text);
+}
+
+/* Eingabefeld */
+.time-field {
+  width: 6rem;
+  padding: var(--space-sm) var(--space-xs);
+  font-size: 1.4rem;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  appearance: none;
+  outline: 0;
+}
+
+/* Zustände */
+.time-field--focus {
+  border-color: #64b5f6;
+}
+
+.time-field--error {
+  border-color: red;
+}
+
+.time-field--default {
+  border-color: #ccc;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .base-label {
+    font-size: 1.6rem;
+  }
+
+  .time-field {
+    font-size: 1.6rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .base-label {
+    font-size: 1.6rem;
+  }
+
+  .time-field {
+    font-size: 1.6rem;
+  }
+}

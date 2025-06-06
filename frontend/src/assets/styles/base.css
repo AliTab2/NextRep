@@ -1,0 +1,104 @@
+@import '@/assets/styles/variables.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-base);
+  height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: var(--line-height-heading);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-sm);
+}
+
+/* p {
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-base);
+} */
+
+a {
+  /* color: var(--color-primary); */
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  /* color: var(--color-primary-hover); */
+  text-decoration: underline;
+}
+
+:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+} */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-md);
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  padding: var(--input-padding);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: var(--color-text);
+}
+
+label {
+  display: block;
+  margin-bottom: var(--space-xs);
+  font-size: var(--label-font-size);
+  font-weight: var(--font-weight-medium);
+}
+
+button {
+  cursor: pointer;
+  background-color: var(--color-primary);
+  color: white;
+  font-size: var(--button-font-size);
+  padding: var(--button-padding);
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+html {
+  font-size: 62.5%; /* 1rem = 10px */
+}
