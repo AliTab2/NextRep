@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000/api/courses'
+const BASE_URL = 'https://nextrep-gjus.onrender.com/api/courses'
 
 export async function getCourses() {
   const res = await fetch(BASE_URL)

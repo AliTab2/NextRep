@@ -103,7 +103,7 @@ button {
   border-radius: 0.75rem;
   background-color: var(--color-primary);
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
   display: flex;

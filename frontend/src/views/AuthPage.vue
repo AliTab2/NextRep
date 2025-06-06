@@ -25,6 +25,7 @@
                 @input="onInput(index, $event)"
                 @keydown.backspace="onBackspace(index, $event)"
                 ref="inputs"
+                type="tel"
               />
             </div>
           </div>
@@ -43,7 +44,7 @@ const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 
-const codeLength = 8
+const codeLength = 6
 const code = reactive(Array(codeLength).fill(''))
 const inputs = ref([])
 const statusMessage = ref('')
@@ -82,7 +83,7 @@ function onBackspace(index) {
 watch(code, async () => {
   const fullCode = code.join('')
 
-  if (fullCode.length !== 8) return
+  if (fullCode.length !== 6) return
 
   isLoading.value = true
   const res = await userStore.login_store(fullCode)

@@ -140,7 +140,7 @@ export default {
 }
 
 .app-header__container {
-  height: 4rem;
+  height: 6rem;
   padding: 0 var(--space-md);
   display: flex;
   justify-content: space-between;
@@ -150,7 +150,7 @@ export default {
 }
 
 .app-header__title {
-  font-size: 2rem;
+  font-size: 2.5rem;
   letter-spacing: -0.01em;
   color: var(--color-text);
   display: flex;
@@ -167,7 +167,7 @@ export default {
 }
 
 .app-header__date {
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: var(--color-text);
   display: flex;
   align-items: center;
@@ -176,7 +176,7 @@ export default {
 }
 
 .user-icon {
-  font-size: 2rem;
+  font-size: 2.5rem;
 }
 
 .user-menu {
@@ -203,22 +203,22 @@ export default {
 /* Media Queries */
 @media (min-width: 576px) {
   .app-header__title,
-  .user-icon {
+  /* .user-icon {
     font-size: 2.2rem;
-  }
+  } */
   .app-header__date {
     font-size: 1.2rem;
   }
-  .app-header__container {
+  /* .app-header__container {
     height: 5rem;
-  }
+  } */
 }
 
 @media (min-width: 768px) {
   .app-header__title,
-  .user-icon {
+  /* .user-icon {
     font-size: 2.4rem;
-  }
+  } */
   .app-header__date {
     font-size: 1.4rem;
   }

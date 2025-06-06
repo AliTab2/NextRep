@@ -1,14 +1,6 @@
 <template>
   <base-form :title="formLabel">
     <BaseInput label="Name" placeholder="Bitte Name eingeben" v-model="name" :inValid="isInvalid" />
-    <!-- <BaseCheckboxGroup
-      label="Rolen"
-      placeholder-label="Bitte Rolen wählen"
-      :options="roles"
-      v-model="selectedRoles"
-      :inValid="isInvalid"
-      v-if="!selectedRoles.includes('superadmin')"
-    /> -->
     <BaseCheckbox v-model="selectedRoles" :option="option" />
     <BaseCheckboxGroup
       label="Kurse"

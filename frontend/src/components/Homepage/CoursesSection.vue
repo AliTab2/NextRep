@@ -43,7 +43,7 @@ export default {
 .title {
   color: white;
   text-align: center;
-  font-weight: lighter;
+  font-weight: bolder;
   font-style: italic;
 
   margin-bottom: 4rem;
@@ -71,7 +71,7 @@ export default {
 .course-box p {
   color: whitesmoke;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 @media (min-width: 576px) {

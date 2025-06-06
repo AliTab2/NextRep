@@ -1,22 +1,3 @@
-<!-- <template>
-  <div class="base-input">
-    <label v-if="label" :for="inputId" class="base-label">{{ label }}</label>
-    <input
-      :id="inputId"
-      :type="type"
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
-      @focus="isFocused = true"
-      @blur="handleBlur()"
-      :placeholder="placeholder"
-      :class="['base-field', statusClass, `base-field--${variant}`]"
-      :disabled="disabled"
-      :maxlength="length"
-      ref="inputRef"
-    />
-  </div>
-</template> -->
-
 <template>
   <div class="base-input">
     <label v-if="label" :for="inputId" class="base-label">{{ label }}</label>
