@@ -21,8 +21,8 @@ const useCourseStore = defineStore('courses', {
   actions: {
     async addCourse_store(course, logObj) {
       try {
-        let autoMsg = null
         // WhatsApp message
+        let autoMsg = null
         if (logObj) {
           const temp = logTemplates.course[logObj.actionKey]
           logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
@@ -33,12 +33,16 @@ const useCourseStore = defineStore('courses', {
           autoMsg = renderLogMessage(temp, logObj)
         }
 
+        if (autoMsg.toLowerCase().includes('invalid date')) {
+          autoMsg = null
+        }
+
         const res = await createCourse(course, this.userId, autoMsg)
         const result = await handleApiResponse(res, 'Kurs Hinzufügen fehlgeschlagen')
 
-        if (!result.error && logObj) {
-          this.logCourseAction(logObj.actionKey, logObj)
-        }
+        // if (!result.error && logObj) {
+        //   this.logCourseAction(logObj.actionKey, logObj)
+        // }
 
         return result
       } catch (err) {
@@ -50,13 +54,20 @@ const useCourseStore = defineStore('courses', {
     async updateCourse_store(updatedCourse, logObj) {
       try {
         // WhatsApp message
-        const temp = logTemplates.course[logObj.actionKey]
-        logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        })
-        const autoMsg = renderLogMessage(temp, logObj)
+        let autoMsg = null
+        if (logObj) {
+          const temp = logTemplates.course[logObj.actionKey]
+          logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })
+          autoMsg = renderLogMessage(temp, logObj)
+        }
+
+        // if (autoMsg.toLowerCase().includes('invalid date')) {
+        //   autoMsg = null
+        // }
 
         const res = await updateCourse(updatedCourse._id, updatedCourse, this.userId, autoMsg)
         const result = await handleApiResponse(res, 'Kurs Aktualisieren fehlgeschlagen')
@@ -75,13 +86,20 @@ const useCourseStore = defineStore('courses', {
     async deleteCourse_store(courseId, logObj) {
       try {
         // WhatsApp message
-        const temp = logTemplates.course[logObj.actionKey]
-        logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        })
-        const autoMsg = renderLogMessage(temp, logObj)
+        let autoMsg = null
+        if (logObj) {
+          const temp = logTemplates.course[logObj.actionKey]
+          logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })
+          autoMsg = renderLogMessage(temp, logObj)
+        }
+
+        // if (autoMsg.toLowerCase().includes('invalid date')) {
+        //   autoMsg = null
+        // }
 
         const res = await deleteCourse(courseId, this.userId, autoMsg)
         const result = await handleApiResponse(res, 'Kurs Löschen fehlgeschlagen')

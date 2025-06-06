@@ -169,7 +169,7 @@ export default {
                 ...this.course,
                 date: { ...this.course.date, recurring: false },
               },
-              { ...logObj },
+              // { ...logObj },
             )
             this.isLoading = false
 

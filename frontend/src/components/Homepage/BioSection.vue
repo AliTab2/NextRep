@@ -60,7 +60,7 @@ export default {
           pos: 'Trainerin',
           desc: 'Seit 2021 im CleverFit-Team, als Studioleiterin bis August 2024. Kursleitung ab Januar 2023 - und ja, ich liebe es, wenn alles perfekt läuft, aber vor allem, wenn es Spaß macht!',
           img: avaImg,
-          courses: 'LMI Step, Vertretung: Les Mills Body Attack & Body Combat',
+          courses: 'LMI Step | Body Attack | Body Combat',
         },
         {
           name: 'Kai',
