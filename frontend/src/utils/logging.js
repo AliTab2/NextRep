@@ -40,13 +40,14 @@ export function renderLogMessage(template, values) {
  */
 
 export function generateCourseLogObj(actionKey, courseObj = {}, weekRange = null) {
-  const weekRaneToUse = weekRange ? weekRange?.start : courseObj.date?.weekRange?.start
+  const weekRangeToUse = weekRange ? weekRange?.start : courseObj.date?.weekRange?.start
   const weekDay = courseObj.date?.weekDay
+
   return {
     actionKey,
     course: courseObj.sport,
     target_day: courseObj.date.weekDayName,
-    target_date: getDateFromWeekRange(weekRaneToUse, weekDay),
+    target_date: getDateFromWeekRange(weekRangeToUse, weekDay),
   }
 }
 

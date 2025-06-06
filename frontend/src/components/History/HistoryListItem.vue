@@ -4,7 +4,12 @@
       <p class="history__list-user">{{ entry.userName }}</p>
       <p class="history__list-meta">{{ formattedDateTime }}</p>
     </div>
-    <p class="history__list-action">{{ entry.message }}</p>
+    <p
+      class="history__list-action"
+      v-if="entry.message.toLowerCase().includes('invalid date') === false"
+    >
+      {{ entry.message }}
+    </p>
   </li>
 </template>
 
@@ -23,7 +28,7 @@ export default {
         hour: '2-digit',
         minute: '2-digit',
       })
-      return `${dateStr} – ${timeStr}`
+      return `${dateStr} - ${timeStr}`
     },
   },
 }

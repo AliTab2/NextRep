@@ -36,6 +36,7 @@
           @error="handleError"
           @success="handleSuccess"
           :should-delete-course="shouldDeleteCourse"
+          :delete-options="deleteOptions"
           @course-deleted="handleCourseDeleted"
         />
       </template>
@@ -90,10 +91,11 @@ export default {
       isValid: false,
       cardVisible: true,
       formVisible: false,
-      shouldDeleteCourse: false,
       statusMessage: '',
       statusType: '',
       isLoading: false,
+      shouldDeleteCourse: false,
+      deleteOptions: {},
     }
   },
   created() {
@@ -124,8 +126,9 @@ export default {
       this.screenIsLarge = window.innerWidth >= 1000
       if (this.screenIsLarge) this.cardVisible = true
     },
-    handleDeleteCourse() {
+    handleDeleteCourse(options) {
       this.shouldDeleteCourse = !this.shouldDeleteCourse
+      this.deleteOptions = { ...options }
       this.isLoading = true
     },
     handleCourseDeleted() {

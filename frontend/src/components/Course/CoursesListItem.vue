@@ -56,7 +56,7 @@ export default {
       const courseDay = new Date(courseDate)
       courseDay.setHours(0, 0, 0, 0)
 
-      return courseDay < today
+      return courseDay < today && this.course.date.recurring === false
     },
     statusText() {
       if (this.isExpired) return 'Abgelaufen'
@@ -122,6 +122,7 @@ export default {
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--color-primary);
+  min-width: fit-content;
 }
 
 .courses__list-item:hover {

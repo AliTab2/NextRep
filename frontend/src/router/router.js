@@ -62,8 +62,6 @@ router.beforeEach((to, from, next) => {
     to.meta.from = from.path
   }
 
-  console.log(to)
-
   // 🆕 Redirect-Handling
   if (to.path === '/' && to.query.redirect === 'calendar') {
     return next({ name: 'Calendar' })

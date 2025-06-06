@@ -77,7 +77,7 @@ import { generateCourseLogObj } from '@/utils/logging'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 
 export default {
-  props: ['courseObj', 'isEditing', 'shouldDeleteCourse'],
+  props: ['courseObj', 'isEditing', 'shouldDeleteCourse', 'deleteOptions'],
   components: {
     CourseSportSelector,
     CourseDurationSelector,
@@ -194,7 +194,7 @@ export default {
                 ...this.course,
                 date: { ...this.course.date, recurring: true },
               },
-              { ...logObj },
+              // { ...logObj },
             )
             this.isLoading = false
 
@@ -229,6 +229,11 @@ export default {
       }
     },
     async deleteCourse() {
+      // delete this and futre entries from mobile!
+      if (this.deleteOptions?.isMobile && this.deleteOptions?.all) {
+        this.changeOnlyThisEntry = false
+      }
+
       try {
         if (this.courseCopy.date.recurring) {
           // Wiederkehrender Kurs
@@ -290,7 +295,7 @@ export default {
 
       this.hasChangedCount += 1
 
-      if (this.isEditing && this.hasChangedCount > 1) {
+      if (this.isEditing && this.hasChangedCount >= 1) {
         this.hasChanged = true
       }
       if (!this.isEditing) this.hasChanged = true
@@ -330,6 +335,7 @@ export default {
     },
     updateCourseTypeOfChange(value) {
       this.changeOnlyThisEntry = value === 'once'
+      this.hasChanged = true
     },
 
     ...mapActions(useCourseStore, ['addCourse_store', 'updateCourse_store', 'deleteCourse_store']),

@@ -25,6 +25,13 @@
     >
       <p class="calendar-event__preview-weekday">{{ weekDayName || 'Wochentag' }}</p>
       <p class="calendar-event__preview-recurring">{{ getRecurring || 'Wiederholung' }}</p>
+
+      <BaseCheckbox
+        style="margin: 1rem 0"
+        v-model="deleteAll"
+        :option="{ label: 'Und alle weiteren Termine löschen', value: true }"
+        v-if="!screenIsLarge && hasPermission('edit:course')"
+      />
     </div>
     <div class="btn-container">
       <base-button
@@ -35,7 +42,7 @@
       >
       <base-button
         variant="delete"
-        @click="$emit('delete-course')"
+        @click="$emit('delete-course', { isMobile: !screenIsLarge, all: deleteAll[0] || false })"
         :is-loading="isLoading"
         class="btn-container__delete"
         v-if="!['Calendar', 'AddCourse'].includes($route.name) && hasPermission('delete:course')"
@@ -97,6 +104,7 @@ export default {
     return {
       screenIsLarge: window.innerWidth >= 1000,
       courseWidgets: structuredClone(coursesWidgetsList),
+      deleteAll: [],
     }
   },
   created() {
@@ -105,7 +113,6 @@ export default {
   beforeUnmount() {
     window.removeEventListener('resize', this.checkScreenSize)
   },
-
   methods: {
     goToEditCoursePage() {
       this.navigate({ mode: 'push', to: { name: 'EditCourse', params: { id: this.courseId } } })
@@ -321,6 +328,7 @@ export default {
   flex-direction: row;
   justify-content: center;
   margin-top: 1rem;
+  gap: 1rem;
 }
 .btn-container__edit,
 .btn-container__delete {

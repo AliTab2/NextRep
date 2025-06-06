@@ -21,14 +21,17 @@ const useCourseStore = defineStore('courses', {
   actions: {
     async addCourse_store(course, logObj) {
       try {
+        let autoMsg = null
         // WhatsApp message
-        const temp = logTemplates.course[logObj.actionKey]
-        logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        })
-        const autoMsg = renderLogMessage(temp, logObj)
+        if (logObj) {
+          const temp = logTemplates.course[logObj.actionKey]
+          logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })
+          autoMsg = renderLogMessage(temp, logObj)
+        }
 
         const res = await createCourse(course, this.userId, autoMsg)
         const result = await handleApiResponse(res, 'Kurs Hinzufügen fehlgeschlagen')
@@ -124,6 +127,7 @@ const useCourseStore = defineStore('courses', {
         }
 
         const message = renderLogMessage(template, values)
+
         const historyStore = useHistoryStore()
         const result = await historyStore.createHistoryEntry({
           action: actionKey,
