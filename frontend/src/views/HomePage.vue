@@ -17,7 +17,7 @@ import CoursesSection from '@/components/Homepage/CoursesSection.vue'
 import BioSection from '@/components/Homepage/BioSection.vue'
 import AboutSection from '@/components/Homepage/AboutSection.vue'
 import ContactSection from '@/components/Homepage/ContactSection.vue'
-import EndSection from '@/components/HomePage/EndSection.vue'
+import EndSection from '@/components/Homepage/EndSection.vue'
 
 export default {
   components: {
