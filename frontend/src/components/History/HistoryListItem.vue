@@ -1,9 +1,5 @@
 <template>
-  <li
-    class="history__list-item"
-    v-if="entry.message.toLowerCase().includes('invalid date') === false"
-  >
-    <!-- <li class="history__list-item"> -->
+  <li class="history__list-item">
     <div class="history__list-texts">
       <p class="history__list-user">{{ entry.userName }}</p>
       <p class="history__list-meta">{{ formattedDateTime }}</p>

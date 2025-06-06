@@ -58,6 +58,7 @@ export function getDateFromWeekRange(weekStart, weekDay) {
   const resultDate = new Date(weekStart)
   resultDate.setHours(0, 0, 0, 0)
   resultDate.setDate(resultDate.getDate() + moveDays[weekDay])
+
   return resultDate
 }
 

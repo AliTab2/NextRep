@@ -120,16 +120,13 @@ const useCourseStore = defineStore('courses', {
       this.weekRange.end = endDate
     },
     async logCourseAction(actionKey, values) {
+      console.log(values)
       try {
         const template = logTemplates.course[actionKey]
 
         if (!template) {
           console.error(`[Log] Kein Template für: ${actionKey}`)
           return
-        }
-
-        if (values.target_date) {
-          values.target_date = new Date(values.target_date).toLocaleDateString('de-DE')
         }
 
         const message = renderLogMessage(template, values)
