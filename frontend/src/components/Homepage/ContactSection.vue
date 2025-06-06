@@ -2,8 +2,8 @@
   <SectionView backgroundColor="var(--color-primary-hover)">
     <template #content>
       <h1 class="title">
-        So könnt ihr den <span style="text-decoration: underline">nexten</span>
-        Reper werden:
+        Scanne jetzt den QR-Code ein oder klick auf den Link und werde zum
+        <span style="text-decoration: underline">Next-Reper</span>
       </h1>
       <div class="contact-wrapper">
         <div class="contact-left">
