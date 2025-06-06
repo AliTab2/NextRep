@@ -33,16 +33,12 @@ const useCourseStore = defineStore('courses', {
           autoMsg = renderLogMessage(temp, logObj)
         }
 
-        if (autoMsg.toLowerCase().includes('invalid date')) {
-          autoMsg = null
-        }
-
         const res = await createCourse(course, this.userId, autoMsg)
         const result = await handleApiResponse(res, 'Kurs Hinzufügen fehlgeschlagen')
 
-        // if (!result.error && logObj) {
-        //   this.logCourseAction(logObj.actionKey, logObj)
-        // }
+        if (!result.error && logObj) {
+          this.logCourseAction(logObj.actionKey, logObj)
+        }
 
         return result
       } catch (err) {
@@ -64,10 +60,6 @@ const useCourseStore = defineStore('courses', {
           })
           autoMsg = renderLogMessage(temp, logObj)
         }
-
-        // if (autoMsg.toLowerCase().includes('invalid date')) {
-        //   autoMsg = null
-        // }
 
         const res = await updateCourse(updatedCourse._id, updatedCourse, this.userId, autoMsg)
         const result = await handleApiResponse(res, 'Kurs Aktualisieren fehlgeschlagen')
@@ -96,10 +88,6 @@ const useCourseStore = defineStore('courses', {
           })
           autoMsg = renderLogMessage(temp, logObj)
         }
-
-        // if (autoMsg.toLowerCase().includes('invalid date')) {
-        //   autoMsg = null
-        // }
 
         const res = await deleteCourse(courseId, this.userId, autoMsg)
         const result = await handleApiResponse(res, 'Kurs Löschen fehlgeschlagen')
