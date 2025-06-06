@@ -1,13 +1,6 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 import useUserStore from '@/stores/userStore'
 
-// import HomePage from '@/views/HomePage.vue'
-// import CalendarPage from '@/views/CalendarPage.vue'
-// import CoursePage from '@/views/CoursePage.vue'
-// import AdminPage from '@/views/AdminPage.vue'
-// import UserPage from '@/views/UserPage.vue'
-// import AuthPage from '@/views/AuthPage.vue'
-
 const router = createRouter({
   history: createMemoryHistory(),
   routes: [
@@ -67,6 +60,11 @@ router.beforeEach((to, from, next) => {
 
   if (from.path !== to.path) {
     to.meta.from = from.path
+  }
+
+  // 🆕 Redirect-Handling
+  if (to.path === '/' && to.query.redirect) {
+    return next({ path: `/${to.query.redirect}` })
   }
 
   // blocked users first

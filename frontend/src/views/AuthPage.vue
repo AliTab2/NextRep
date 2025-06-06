@@ -25,6 +25,7 @@
                 @input="onInput(index, $event)"
                 @keydown.backspace="onBackspace(index, $event)"
                 ref="inputs"
+                inputmode="numeric"
                 type="tel"
               />
             </div>
