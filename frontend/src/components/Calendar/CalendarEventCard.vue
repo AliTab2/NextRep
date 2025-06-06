@@ -262,6 +262,7 @@ export default {
   background-color: lightblue;
   border: 1px solid blue;
   color: blue;
+  font-size: 0.7rem;
 }
 
 .status-cancelled {
@@ -298,6 +299,9 @@ export default {
   .calendar-event__time,
   .calendar-event__duration {
     min-height: 0%;
+  }
+  .status-change {
+    font-size: inherit;
   }
 }
 

@@ -202,23 +202,12 @@ export default {
 
 /* Media Queries */
 @media (min-width: 576px) {
-  .app-header__title,
-  /* .user-icon {
-    font-size: 2.2rem;
-  } */
   .app-header__date {
     font-size: 1.2rem;
   }
-  /* .app-header__container {
-    height: 5rem;
-  } */
 }
 
 @media (min-width: 768px) {
-  .app-header__title,
-  /* .user-icon {
-    font-size: 2.4rem;
-  } */
   .app-header__date {
     font-size: 1.4rem;
   }
@@ -228,10 +217,6 @@ export default {
 }
 
 @media (min-width: 1024px) {
-  .app-header__title,
-  .user-icon {
-    font-size: 2.6rem;
-  }
   .app-header__date {
     font-size: 1.6rem;
   }
