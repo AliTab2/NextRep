@@ -8,7 +8,7 @@ export async function sendCourseMessage(adminName, msg) {
   const message = 
         `🚨 *${adminName}* hat eine Änderung vorgenommen!\n\n` +
         `🗓 _*Änderung*: ${msg}_\n\n` +
-        `👉 Schaut mal rein: https://www.next-rep.app/?redirect=calendar`
+        `👉 Schaut mal rein: https://www.next-rep.app`
 
   const options = {
     method: 'POST',
