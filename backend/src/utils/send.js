@@ -25,7 +25,6 @@ export async function sendCourseMessage(adminName, msg) {
 
   try {
     const { data } = await axios.request(options)
-    console.log(data)
   } catch (error) {
     console.error(error)
   }
