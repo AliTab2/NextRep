@@ -140,6 +140,7 @@ export default {
     statusClass() {
       if (this.status === 'represent') return 'status-represent'
       if (this.status === 'regular') return 'status-regular'
+      if (this.status === 'change') return 'status-change'
       return 'status-cancelled'
     },
     courseStyle() {
@@ -159,6 +160,7 @@ export default {
     getStatus() {
       if (this.status === 'represent') return 'Vertretung'
       if (this.status === 'regular') return 'Regulär'
+      if (this.status === 'change') return 'Änderung'
       return 'Ausfall'
     },
     getRecurring() {
@@ -254,6 +256,12 @@ export default {
   background-color: #e8f5e9;
   color: green;
   border: 1px solid green;
+}
+
+.status-change {
+  background-color: lightblue;
+  border: 1px solid blue;
+  color: blue;
 }
 
 .status-cancelled {

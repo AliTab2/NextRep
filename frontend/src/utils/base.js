@@ -71,6 +71,7 @@ const status = [
   { label: 'Regulär', value: 'regular' },
   { label: 'Vertretung', value: 'represent' },
   { label: 'Ausfall', value: 'cancelled' },
+  { label: 'Änderung', value: 'change' },
 ]
 
 const courses = [
