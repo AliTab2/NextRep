@@ -8,12 +8,12 @@ export async function sendCourseMessage(adminName, msg) {
   const messageLong = 
         `🚨 *${adminName}* hat eine Änderung vorgenommen!\n\n` +
         `🗓 _*Änderung*: ${msg}_\n\n` +
-        `👉 Schaut mal rein: https://www.next-rep.app`
+        `👉 Schaut mal rein: https://www.next-rep.app?redirect=calendar`
 
   
   const messageShort = 
   `🚨 *${adminName}* hat eine Änderung vorgenommen!\n\n` +
-  `👉 Schaut mal rein: https://www.next-rep.app`
+  `👉 Schaut mal rein: https://www.next-rep.app?redirect=calendar`
 
   const message = msg.toLowerCase().includes('invalid date') ? messageShort : messageLong
 
