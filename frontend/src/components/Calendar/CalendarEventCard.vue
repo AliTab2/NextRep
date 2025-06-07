@@ -265,6 +265,10 @@ export default {
   font-size: 0.7rem;
 }
 
+.calendar-card--large .status-change {
+  font-size: inherit;
+}
+
 .status-cancelled {
   background-color: #ffebee;
   color: #d32f2f;
