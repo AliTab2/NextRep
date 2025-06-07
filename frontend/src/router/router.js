@@ -1,8 +1,8 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createWebHistory, createRouter } from 'vue-router'
 import useUserStore from '@/stores/userStore'
 
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
   routes: [
     { path: '/', name: 'Home', component: () => import('@/views/HomePage.vue') },
     { path: '/calendar', name: 'Calendar', component: () => import('@/views/CalendarPage.vue') },

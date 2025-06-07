@@ -2,7 +2,7 @@
   <SectionView backgroundColor="var(--color-primary-hover)">
     <template #content>
       <h1 class="title">
-        Scanne jetzt den QR-Code ein oder klick auf den Link und werde zum
+        Scanne jetzt den QR-Code ein oder klicke auf den Link und werde zum
         <span style="text-decoration: underline">Next-Reper</span>
       </h1>
       <div class="contact-wrapper">

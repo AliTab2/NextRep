@@ -1,8 +1,12 @@
 <template>
   <SectionView backgroundColor="var(--color-primary)">
     <template #content>
-      <h1 class="title">
+      <!-- <h1 class="title">
         Auf <strong style="text-decoration: underline">8 verschiedene</strong> Wege kannst Du den
+        nächsten <strong>Rep</strong> treffen!
+      </h1> -->
+      <h1 class="title">
+        Auf <strong style="text-decoration: underline">8 verschiedene</strong> Wege könnt ihr den
         nächsten <strong>Rep</strong> treffen!
       </h1>
       <div class="courses-wrapper">

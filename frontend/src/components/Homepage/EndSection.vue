@@ -4,8 +4,8 @@
       <div class="thanks-wrapper">
         <p class="text">
           Ein besonderes Dankeschön an meinen älteren Bruder Omar, der mir geholfen hat, die Texte
-          auf der Homepage zu formulieren, und an meinen kleinen Bruder Moaaz, der die Fotos für die
-          Homepage gemacht hat!
+          auf der Homepage zu formulieren, und an meinen jüngeren Bruder Moaaz, der die Fotos für
+          die Homepage gemacht hat!
         </p>
       </div>
       <ul class="footer-list">

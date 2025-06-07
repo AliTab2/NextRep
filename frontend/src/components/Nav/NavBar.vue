@@ -1,7 +1,9 @@
 <template>
   <header class="app-header">
     <div class="app-header__container">
-      <h1 class="app-header__title">NextRep</h1>
+      <h1 class="app-header__title" @click="navigate({ mode: 'push', to: { name: 'Home' } })">
+        NextRep
+      </h1>
 
       <CalendarNav
         v-if="showCalNav"
@@ -156,6 +158,7 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 0;
+  cursor: pointer;
 }
 
 .app-header__calendar-nav {
