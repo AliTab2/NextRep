@@ -72,11 +72,13 @@ export default {
           label: 'Homepage',
           to: { name: 'Home' },
           variant: 'dropdown',
+          condition: () => this.$route.name !== 'Home',
         },
         {
           label: 'Kalender',
           to: { name: 'Calendar' },
           variant: 'dropdown',
+          condition: () => this.$route.name !== 'Calendar',
         },
         {
           label: 'Anmelden',
