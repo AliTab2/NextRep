@@ -6,10 +6,10 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: () => import('@/views/HomePage.vue'),
+      name: 'Calendar',
+      component: () => import('@/views/CalendarPage.vue'),
     },
-    { path: '/calendar', name: 'Calendar', component: () => import('@/views/CalendarPage.vue') },
+    { path: '/home', name: 'Home', component: () => import('@/views/HomePage.vue') },
     {
       path: '/course/add',
       name: 'AddCourse',

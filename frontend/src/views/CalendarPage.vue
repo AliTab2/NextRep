@@ -1,7 +1,5 @@
 <template>
   <div class="calendar-page">
-    <!-- <div class="overlay"></div> -->
-
     <CalendarBody />
   </div>
 </template>

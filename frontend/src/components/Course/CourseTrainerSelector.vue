@@ -4,7 +4,7 @@
 
 <script>
 import { mapState } from 'pinia'
-import useUserStore from '@/stores/userStore'
+import useUserStore from '@/stores/userStore.js'
 
 export default {
   props: {

@@ -84,7 +84,7 @@ export default {
     exceptionNote() {
       const exceptions = this.course.date?.exceptions || []
       if (exceptions.length > 0) {
-        return 'Achtung: Dieser Kurs entfällt an einzelnen Tagen - siehe Kalender.'
+        return 'Achtung: Änderung oder Entfall an einzelnen Tagen - siehe Kalender.'
       }
       return ''
     },

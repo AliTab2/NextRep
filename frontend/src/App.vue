@@ -31,15 +31,16 @@ export default {
     return { navigate }
   },
   methods: {
-    ...mapActions(useUserStore, ['restoreSession']),
+    ...mapActions(useUserStore, ['restoreSession', 'getUsers_store']),
   },
   computed: {
     ...mapState(useUserStore, ['isLoggedIn']),
   },
   async mounted() {
     await this.restoreSession()
+    await this.getUsers_store()
     if (this.isLoggedIn) {
-      this.navigate({ mode: 'push', to: { name: 'Admin' } })
+      this.navigate({ mode: 'push', to: { name: 'Calendar' } })
     }
   },
 }
