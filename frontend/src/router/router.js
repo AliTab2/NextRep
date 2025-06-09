@@ -4,7 +4,11 @@ import useUserStore from '@/stores/userStore'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', name: 'Home', component: () => import('@/views/HomePage.vue') },
+    {
+      path: '/',
+      name: 'Home',
+      component: () => import('@/views/HomePage.vue'),
+    },
     { path: '/calendar', name: 'Calendar', component: () => import('@/views/CalendarPage.vue') },
     {
       path: '/course/add',

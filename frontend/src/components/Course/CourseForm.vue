@@ -161,7 +161,11 @@ export default {
 
           if (this.changeOnlyThisEntry) {
             // Fall: Nur diese eine Instanz bearbeiten (aus Serien-Kurs)
-            const logObj = generateCourseLogObj('edit_single', this.course, this.weekRange)
+            const logObj = generateCourseLogObj('edit_single', this.courseCopy, this.weekRange)
+
+            // ### TEST ###
+            // console.log(logObj)
+
             this.isLoading = true
             const updateRes = await this.updateCourse_store(this.courseCopy, logObj)
             const addRes = await this.addCourse_store(
@@ -185,7 +189,10 @@ export default {
           } else {
             // Fall: Diese Instanz + alle folgenden bearbeiten
             this.courseCopy.date.repeatUntil = new Date(this.weekRange.start)
-            const logObj = generateCourseLogObj('edit_all', this.course, this.weekRange)
+            const logObj = generateCourseLogObj('edit_all', this.courseCopy, this.weekRange)
+
+            // ### TEST ###
+            // console.log(logObj)
 
             this.isLoading = true
             const updateRes = await this.updateCourse_store(this.courseCopy, logObj)
@@ -210,7 +217,10 @@ export default {
           }
         } else {
           // Fall: Einzelkurs bearbeiten
-          const logObj = generateCourseLogObj('edit_single', this.course)
+          const logObj = generateCourseLogObj('edit_single', this.courseCopy)
+
+          // ### TEST ###
+          // console.log(logObj)
 
           this.isLoading = true
           const res = await this.updateCourse_store(this.course, logObj)
