@@ -1,12 +1,4 @@
 <template>
-  <!-- <ul class="calendar-days">
-    <li v-for="(day, index) in days" :key="index" class="calendar-days__item">
-      <p class="calendar-days__name">{{ day }}</p>
-      <p class="calendar-days__weekday">
-        {{ dayDates[index] }}
-      </p>
-    </li>
-  </ul> -->
   <ul class="calendar-days">
     <li
       v-for="(day, index) in days"
@@ -34,18 +26,6 @@ export default {
   },
   computed: {
     ...mapState(useCourseStore, ['weekRange']),
-
-    // dayDates() {
-    //   if (!this.weekRange || !this.weekRange.start) return []
-
-    //   const startDate = new Date(this.weekRange.start)
-
-    //   return this.days.map((_, index) => {
-    //     const date = new Date(startDate)
-    //     date.setDate(startDate.getDate() + index)
-    //     return date.getDate()
-    //   })
-    // },
     dayDates() {
       if (!this.weekRange || !this.weekRange.start) return []
 
@@ -82,8 +62,6 @@ export default {
   position: sticky;
   top: 0;
   z-index: 10;
-  /* background-color: #f9f9f9; */
-  /* background-color: var(--color-primary-hover); */
   box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2);
 }
 
@@ -131,11 +109,4 @@ export default {
   font-weight: bolder;
   background-color: var(--color-primary);
 }
-
-/* .is-today {
-  background-color: var(--color-primary);
-  padding: 0 1rem;
-  border-radius: 9999px;
-  font-weight: bolder;
-} */
 </style>

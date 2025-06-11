@@ -244,6 +244,7 @@ export default {
   width: fit-content;
   padding: 0 var(--space-xs);
   border-radius: 9999px;
+  white-space: nowrap;
 }
 
 .status-represent {
