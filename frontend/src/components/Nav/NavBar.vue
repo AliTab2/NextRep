@@ -25,7 +25,9 @@
           >
             {{ item.label }}
           </base-button>
-          <base-button variant="dropdown" @click="exportDay">Exportieren</base-button>
+          <base-button variant="dropdown" @click="exportDay" v-if="$route.name === 'Calendar'"
+            >Exportieren</base-button
+          >
         </div>
       </div>
     </div>
