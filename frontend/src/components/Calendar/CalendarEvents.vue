@@ -126,11 +126,6 @@ export default {
       )
     },
   },
-  watch: {
-    isExporting(val) {
-      console.log(val)
-    },
-  },
 }
 </script>
 

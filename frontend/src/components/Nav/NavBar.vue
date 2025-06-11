@@ -122,7 +122,8 @@ export default {
       this.showDropdown = !this.showDropdown
     },
     exportDay() {
-      alert('Klicke demnächst einfach auf den Tag!')
+      const shouldExport = confirm('Klicke einfach auf einen Tag!')
+      if (!shouldExport) return
       const courseStore = useCourseStore()
       courseStore.isExporting = true
     },
