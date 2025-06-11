@@ -80,7 +80,10 @@ export default {
       const clonedNode = node.cloneNode(true)
       clonedNode.style.width = `${window.innerWidth / 7}px`
 
-      // // date element
+      // clonedNode.style.flexDirection = 'row'
+      // clonedNode.style.width = `${(window.innerWidth / 7) * clonedNode.children.length}px`
+
+      // date element
       const dateElem = document.createElement('div')
       dateElem.style.width = getComputedStyle(node).width
       dateElem.style.backgroundColor = 'red'
@@ -89,13 +92,14 @@ export default {
       dateElem.style.textAlign = 'center'
       dateElem.style.marginBottom = '1rem'
 
-      // // container
+      // container
       const container = document.createElement('div')
       container.style.display = 'flex'
       container.style.flexDirection = 'column'
       container.style.alignItems = 'center'
-      container.style.width = getComputedStyle(node).width
-      container.style.padding = '1rem 2rem'
+      container.style.width = 'fit-content'
+      container.style.padding = '4rem 2rem'
+      container.style.backgroundColor = 'white'
 
       const date = getDateFromWeekRange(this.weekRange.start, clonedNode.dataset.index)
       dateElem.innerText = date.toLocaleDateString('de-DE', {
