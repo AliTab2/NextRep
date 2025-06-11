@@ -70,7 +70,13 @@ export default {
     exportDay(event) {
       if (!this.isExporting) return
 
-      const node = event.target
+      const node = event.target.closest('.calendar-events__day')
+
+      if (!node) {
+        console.warn('Kein passender Tag gefunden!')
+        return
+      }
+
       const clonedNode = node.cloneNode(true)
       clonedNode.style.width = `${window.innerWidth / 7}px`
 
@@ -79,7 +85,7 @@ export default {
       dateElem.style.width = getComputedStyle(node).width
       dateElem.style.backgroundColor = 'red'
       dateElem.style.color = 'white'
-      dateElem.style.fontSize = '1.6rem'
+      dateElem.style.fontSize = '1.4rem'
       dateElem.style.textAlign = 'center'
       dateElem.style.marginBottom = '1rem'
 
@@ -92,7 +98,11 @@ export default {
       container.style.padding = '1rem 2rem'
 
       const date = getDateFromWeekRange(this.weekRange.start, clonedNode.dataset.index)
-      dateElem.innerText = date.toLocaleDateString('de-DE')
+      dateElem.innerText = date.toLocaleDateString('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+      })
 
       container.appendChild(dateElem)
       container.appendChild(clonedNode)
