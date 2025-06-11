@@ -13,6 +13,7 @@ const useCourseStore = defineStore('courses', {
         start: 0,
         end: 0,
       },
+      isExporting: false,
     }
   },
   getters: {

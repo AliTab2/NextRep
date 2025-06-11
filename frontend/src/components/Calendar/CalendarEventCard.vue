@@ -65,6 +65,8 @@ import { coursesWidgetsList } from '@/utils/base.js'
 import { calcStartTime, calcEndTime, getDateFromWeekRange } from '@/utils/calendar'
 import { usePermission } from '@/composables/usePermission.js'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
+import useCourseStore from '@/stores/courseStore'
+import { mapState } from 'pinia'
 
 export default {
   components: {
@@ -115,6 +117,7 @@ export default {
   },
   methods: {
     goToEditCoursePage() {
+      if (this.isExporting) return
       this.navigate({ mode: 'push', to: { name: 'EditCourse', params: { id: this.courseId } } })
     },
     checkScreenSize() {
@@ -125,6 +128,7 @@ export default {
     },
   },
   computed: {
+    ...mapState(useCourseStore, ['isExporting']),
     getOnceDate() {
       if (!this.weekRange || !this.weekDay) return false
       const onceDate = getDateFromWeekRange(this.weekRange.start, this.weekDay)

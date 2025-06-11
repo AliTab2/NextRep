@@ -8,7 +8,7 @@
       :key="index"
       :class="['calendar-events__day', { 'calendar-events__day--last': index === 6 }]"
       :data-index="index === 6 ? 0 : index + 1"
-      @dblclick="exportDay"
+      @click="exportDay"
     >
       <BaseLoader v-if="isLoading" />
       <transition-group name="slide">
@@ -68,8 +68,7 @@ export default {
   },
   methods: {
     exportDay(event) {
-      const shouldExport = confirm('Möchtest du den Tag exportieren?')
-      if (!shouldExport) return
+      if (!this.isExporting) return
 
       const node = event.target
       const clonedNode = node.cloneNode(true)
@@ -99,11 +98,14 @@ export default {
       container.appendChild(clonedNode)
       document.body.appendChild(container)
 
+      const courseStore = useCourseStore()
+
       htmlToImage
         .toPng(container)
         .then((dataUrl) => {
           download(dataUrl, `${Date.now()}.png`)
           document.body.removeChild(container)
+          courseStore.isExporting = false
         })
         .catch((error) => {
           console.error('Export fehlgeschlagen:', error)
@@ -111,7 +113,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(useCourseStore, ['courses', 'weekRange']),
+    ...mapState(useCourseStore, ['courses', 'weekRange', 'isExporting']),
     groupedCoursesByDay() {
       // return groupCoursesByDay(this.courses, this.weekRange)
 
@@ -122,6 +124,11 @@ export default {
           return aTime - bTime
         }),
       )
+    },
+  },
+  watch: {
+    isExporting(val) {
+      console.log(val)
     },
   },
 }
@@ -148,9 +155,10 @@ export default {
   transition: all 0.2s;
 }
 
-/* .calendar-events__day:hover {
-  background-color: #E0F0FF;
-} */
+.calendar-events__day:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
 
 .calendar-events__day--last {
   border-right: none;

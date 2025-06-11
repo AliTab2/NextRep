@@ -21,10 +21,11 @@
             :key="index"
             :variant="item.variant || 'default'"
             v-show="!item.condition || item.condition()"
-            @click="item.action ? item.action() : navigate({ mode: 'push', to: item.to })"
+            @click="item.action ? item.action : navigate({ mode: 'push', to: item.to })"
           >
             {{ item.label }}
           </base-button>
+          <base-button variant="dropdown" @click="exportDay">Exportieren</base-button>
         </div>
       </div>
     </div>
@@ -36,6 +37,7 @@ import CalendarNav from '@/components/Calendar/CalendarNav.vue'
 import { usePermission } from '@/composables/usePermission.js'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 import useUserStore from '@/stores/userStore.js'
+import useCourseStore from '@/stores/courseStore.js'
 import { mapState, mapActions } from 'pinia'
 
 export default {
@@ -118,6 +120,11 @@ export default {
     },
     toggleDropdown() {
       this.showDropdown = !this.showDropdown
+    },
+    exportDay() {
+      alert('Klicke demnächst einfach auf den Tag!')
+      const courseStore = useCourseStore()
+      courseStore.isExporting = true
     },
   },
   computed: {
