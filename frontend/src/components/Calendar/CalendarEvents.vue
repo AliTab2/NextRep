@@ -109,6 +109,10 @@ export default {
       // white bg for courses
       for (const course of clondedDay.children) {
         course.style.backgroundColor = 'white'
+
+        if (window.innerWidth < 900) {
+          course.firstChild.firstChild.style.fontSize = '1rem'
+        }
       }
 
       screenshotContentContainer.append(clondedDay)
