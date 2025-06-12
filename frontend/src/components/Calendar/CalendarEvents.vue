@@ -28,25 +28,39 @@
       </transition-group>
     </li>
   </ul>
+  <CourseScreenshot
+    :day="screenshotDay"
+    :date="screenshotDate"
+    v-if="takeScreenshot"
+    ref="screenshotContainer"
+  />
 </template>
 
 <script>
 import { mapState } from 'pinia'
 import useCourseStore from '@/stores/courseStore.js'
 import { groupCoursesByDay, getDateFromWeekRange } from '@/utils/calendar'
+import { weekDays } from '@/utils/base.js'
+import { nextTick } from 'vue'
 import CalendarEventCard from '@/components/Calendar/CalendarEventCard.vue'
 import * as htmlToImage from 'html-to-image'
 import download from 'downloadjs'
 
+import CourseScreenshot from '@/components/Course/CourseScreenshot.vue'
+
 export default {
   components: {
     CalendarEventCard,
+    CourseScreenshot,
   },
   data() {
     return {
       statusMessage: '',
       statusType: '',
       isLoading: true,
+      takeScreenshot: false,
+      screenshotDate: '',
+      screenshotDay: '',
     }
   },
   async created() {
@@ -67,59 +81,60 @@ export default {
     }
   },
   methods: {
-    exportDay(event) {
+    async exportDay(event) {
       if (!this.isExporting) return
+      this.takeScreenshot = true
+      await nextTick()
 
-      const node = event.target.closest('.calendar-events__day')
+      const day = event.target.closest('.calendar-events__day')
 
-      if (!node) {
-        console.warn('Kein passender Tag gefunden!')
+      if (!day) {
+        console.warn('No day fonud!')
         return
       }
 
-      const clonedNode = node.cloneNode(true)
-      clonedNode.style.width = `${window.innerWidth / 7}px`
+      // clone day
+      const clondedDay = day.cloneNode(true)
 
-      // clonedNode.style.flexDirection = 'row'
-      // clonedNode.style.width = `${(window.innerWidth / 7) * clonedNode.children.length}px`
+      // get container
 
-      // date element
-      const dateElem = document.createElement('div')
-      dateElem.style.width = getComputedStyle(node).width
-      dateElem.style.backgroundColor = 'red'
-      dateElem.style.color = 'white'
-      dateElem.style.fontSize = '1.4rem'
-      dateElem.style.textAlign = 'center'
-      dateElem.style.marginBottom = '1rem'
+      const screenshotContainer = this.$refs.screenshotContainer.$el
+      const screenshotContentContainer = Array.from(screenshotContainer.children).find((child) =>
+        child.className.includes('screenshot-content'),
+      )
 
-      // container
-      const container = document.createElement('div')
-      container.style.display = 'flex'
-      container.style.flexDirection = 'column'
-      container.style.alignItems = 'center'
-      container.style.width = 'fit-content'
-      container.style.padding = '4rem 2rem'
-      container.style.backgroundColor = 'white'
+      // change courses order
+      clondedDay.style.flexDirection = 'row'
+      clondedDay.style.width = getComputedStyle(screenshotContentContainer).width
 
-      const date = getDateFromWeekRange(this.weekRange.start, clonedNode.dataset.index)
-      dateElem.innerText = date.toLocaleDateString('de-DE', {
+      // white bg for courses
+      for (const course of clondedDay.children) {
+        course.style.backgroundColor = 'white'
+      }
+
+      screenshotContentContainer.append(clondedDay)
+
+      this.screenshotDate = getDateFromWeekRange(
+        this.weekRange.start,
+        clondedDay.dataset.index,
+      ).toLocaleDateString('de-DE', {
         day: '2-digit',
         month: '2-digit',
-        year: '2-digit',
+        year: 'numeric',
       })
 
-      container.appendChild(dateElem)
-      container.appendChild(clonedNode)
-      document.body.appendChild(container)
+      this.screenshotDay = weekDays.find(
+        (day) => day.value.toString() === clondedDay.dataset.index,
+      ).label
 
       const courseStore = useCourseStore()
 
       htmlToImage
-        .toPng(container)
+        .toPng(screenshotContainer)
         .then((dataUrl) => {
           download(dataUrl, `${Date.now()}.png`)
-          document.body.removeChild(container)
           courseStore.isExporting = false
+          this.takeScreenshot = false
         })
         .catch((error) => {
           console.error('Export fehlgeschlagen:', error)

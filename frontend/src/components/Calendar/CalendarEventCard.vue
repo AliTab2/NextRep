@@ -206,7 +206,7 @@ export default {
 /** heights -> for mobile */
 .calendar-event__header {
   /* background-color: red; */
-  min-height: 20%;
+  height: 20%;
 }
 .calendar-event__trainer {
   min-height: 20%;
