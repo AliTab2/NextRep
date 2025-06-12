@@ -95,9 +95,9 @@ export default {
 
       // clone day
       const clondedDay = day.cloneNode(true)
+      clondedDay.style.width = '20rem'
 
       // get container
-
       const screenshotContainer = this.$refs.screenshotContainer.$el
       const screenshotContentContainer = Array.from(screenshotContainer.children).find((child) =>
         child.className.includes('screenshot-content'),
@@ -110,9 +110,6 @@ export default {
       // white bg for courses
       for (const course of clondedDay.children) {
         course.style.backgroundColor = 'white'
-        if (window.innerWidth < 1000) {
-          course.firstChild.firstChild.style.fontSize = '0.9rem'
-        }
       }
 
       screenshotContentContainer.append(clondedDay)
