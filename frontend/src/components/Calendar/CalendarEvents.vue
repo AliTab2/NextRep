@@ -95,7 +95,6 @@ export default {
 
       // clone day
       const clondedDay = day.cloneNode(true)
-      clondedDay.style.width = '20rem'
 
       // get container
       const screenshotContainer = this.$refs.screenshotContainer.$el

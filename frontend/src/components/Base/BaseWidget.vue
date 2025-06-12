@@ -63,11 +63,8 @@ defineProps({
   color: white;
 }
 
-base-widget__label {
-  line-height: 1;
-  white-space: normal;
-  overflow-wrap: break-word;
-  word-break: keep-all;
+.base-widget__label {
+  text-align: center;
 }
 
 @media (min-width: 576px) {
