@@ -63,10 +63,6 @@ defineProps({
   color: white;
 }
 
-.base-widget__label {
-  text-align: center;
-}
-
 @media (min-width: 576px) {
   .base-widget--compact {
     font-size: 0.8rem;
