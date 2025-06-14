@@ -28,6 +28,12 @@
           <base-button variant="dropdown" @click="exportDay" v-if="$route.name === 'Calendar'"
             >Exportieren</base-button
           >
+          <base-button
+            variant="dropdown"
+            v-if="this.$route.name !== 'Auth' && this.isLoggedIn"
+            @click="logout"
+            >Abmelden</base-button
+          >
         </div>
       </div>
     </div>
@@ -89,12 +95,6 @@ export default {
           to: { name: 'Auth' },
           variant: 'dropdown',
           condition: () => !this.isLoggedIn && this.$route.name !== 'Auth',
-        },
-        {
-          label: 'Abmelden',
-          variant: 'dropdown',
-          action: this.logout,
-          condition: () => this.$route.name !== 'Auth' && this.isLoggedIn,
         },
       ],
     }
