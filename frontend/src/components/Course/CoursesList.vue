@@ -47,7 +47,8 @@ export default {
     listTitle() {
       if (this.hasPermission('view:registered-courses') && this.courses.length > 0)
         return `Kurstermine (${this.courses.length})`
-      else if (this.courses.length > 0) return `Meine Kurstermine (${this.courses.length})`
+      else if (this.courses.length > 0)
+        return `Meine Kurstermine (${this.courses.filter((c) => c.trainer.toLowerCase() === this.user.name.toLowerCase()).length})`
       else return 'Keine Kurstermine gefunden!'
     },
   },
