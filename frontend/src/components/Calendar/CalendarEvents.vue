@@ -130,18 +130,18 @@ export default {
         (day) => day.value.toString() === clondedDay.dataset.index,
       ).label
 
-      const courseStore = useCourseStore()
+      // const courseStore = useCourseStore()
 
-      htmlToImage
-        .toPng(screenshotContainer)
-        .then((dataUrl) => {
-          download(dataUrl, `${Date.now()}.png`)
-          courseStore.isExporting = false
-          this.takeScreenshot = false
-        })
-        .catch((error) => {
-          console.error('Export fehlgeschlagen:', error)
-        })
+      // htmlToImage
+      //   .toPng(screenshotContainer)
+      //   .then((dataUrl) => {
+      //     download(dataUrl, `${Date.now()}.png`)
+      //     courseStore.isExporting = false
+      //     this.takeScreenshot = false
+      //   })
+      //   .catch((error) => {
+      //     console.error('Export fehlgeschlagen:', error)
+      //   })
     },
   },
   computed: {

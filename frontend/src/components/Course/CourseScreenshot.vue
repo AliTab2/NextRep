@@ -32,17 +32,20 @@ export default {
   display: flex;
   flex-direction: column;
   background-image: url('@/assets/imgs/flyer-bg.jpg');
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: top;
+  background-color: #e10000;
 }
 
 .screenshot-header {
   margin-top: 3rem;
-  height: 15rem;
+  /* height: 15rem; */
+  height: 10rem;
   width: 100%;
   padding-left: 3rem;
-  font-size: 3rem;
+  /* font-size: 3rem; */
+  font-size: 2rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -54,7 +57,7 @@ export default {
 
 .screenshot-brand {
   color: #db1200;
-  font-size: 3.5rem;
+  font-size: 2.5rem;
 }
 
 .screenshot-content {
@@ -65,5 +68,21 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+
+@media (min-width: 400px) {
+  .screenshot {
+    background-size: cover;
+  }
+}
+
+@media (min-width: 470px) {
+  .screenshot-header {
+    font-size: 3rem;
+    height: 15rem;
+  }
+  .screenshot-brand {
+    font-size: 3.5rem;
+  }
 }
 </style>
