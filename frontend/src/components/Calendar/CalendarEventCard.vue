@@ -120,7 +120,6 @@ export default {
   methods: {
     goToEditCoursePage() {
       if (this.isExporting) return
-      console.log('called')
       this.navigate({
         mode: 'push',
         to: { name: 'AdminCourseEdit', params: { id: this.courseId } },

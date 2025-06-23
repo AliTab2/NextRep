@@ -79,8 +79,6 @@ export default {
       this.statusMessage = message
       this.statusType = status
     }
-
-    console.log(this.courses)
   },
   methods: {
     async exportDay(event) {
