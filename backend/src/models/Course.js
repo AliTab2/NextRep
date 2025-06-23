@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const CourseSchema = new mongoose.Schema({
   sport: { type: String, required: true },
-  trainer: { type: String, required: true },
+  trainer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },  
   time: {
     hour: { type: Number, required: true },
     minutes: { type: Number, default: 0 },
@@ -20,7 +20,6 @@ const CourseSchema = new mongoose.Schema({
     repeatUntil: { type: String, required: false },
   },
   status: { type: String, required: true },
-  reminder: {type: Boolean, required: false, default: false},
 }, { timestamps: true });
 
 const Course = mongoose.model('Course', CourseSchema);

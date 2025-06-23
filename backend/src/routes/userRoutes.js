@@ -5,6 +5,31 @@ import { validateUser } from '../utils/validate.js'
 
 const router = express.Router()
 
+// GET ALL USERS
+router.get('/', checkRole(['superadmin', 'admin']), async (req, res) => {
+  try {
+    const users = await User.find()
+    return res.json(users)
+  } catch (err) {
+    console.error('Fehler beim Abrufen:', err)
+    return res.status(500).json({})
+  }
+}) 
+
+// GET ONE USERS
+router.get('/user', checkRole(['superadmin', 'admin']), async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id']
+    const user = await User.findById(userId)
+    if (!user) return res.status(404).json({})
+    return res.json(user)
+  } catch (err) {
+    console.error('Fehler beim Abrufen:', err)
+    return res.status(500).json({})
+  }
+}) 
+
+// ADD USER
 router.post('/', checkRole(['superadmin']), checkCooldown, async (req, res) => {
   const user = req.body
   if (!validateUser(user)) return res.status(400).json({})
@@ -22,16 +47,7 @@ router.post('/', checkRole(['superadmin']), checkCooldown, async (req, res) => {
   }
 })
 
-router.get('/', checkRole(['superadmin', 'admin']), async (_req, res) => {
-  try {
-    const users = await User.find()
-    return res.json(users)
-  } catch (err) {
-    console.error('Fehler beim Abrufen:', err)
-    return res.status(500).json({})
-  }
-})
-
+// UPDATE USER
 router.put('/:id', checkRole(['superadmin']), checkCooldown, async (req, res) => {
   const updated = req.body
 
@@ -54,6 +70,7 @@ router.put('/:id', checkRole(['superadmin']), checkCooldown, async (req, res) =>
   }
 })
 
+// DELETE USER
 router.delete('/:id', checkRole(['superadmin']), checkCooldown, async (req, res) => {
   try {
     const deleted = await User.findByIdAndDelete(req.params.id)
@@ -65,6 +82,7 @@ router.delete('/:id', checkRole(['superadmin']), checkCooldown, async (req, res)
   }
 })
 
+// LOGIN
 router.post('/login', async (req, res) => {
   const { password } = req.body
   if (!password) return res.status(400).json({})

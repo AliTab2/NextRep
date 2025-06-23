@@ -28,7 +28,7 @@ const emit = defineEmits(['update:modelValue', 'optionSelected'])
 function handleChange(event) {
   const selectedValue = event.target.value
   emit('update:modelValue', selectedValue)
-  emit('optionSelected', selectedValue) // <-- eigenes Event
+  emit('optionSelected', selectedValue)
 }
 
 const props = defineProps({
@@ -84,9 +84,6 @@ const statusClass = computed(() => {
   margin-bottom: var(--space-md);
 }
 
-/* ========================
-   Label (Responsiv & klar)
-   ======================== */
 .base-label {
   margin-bottom: var(--space-xs);
   font-weight: 600;
@@ -106,9 +103,6 @@ const statusClass = computed(() => {
   }
 }
 
-/* ========================
-   Select (Input-Feld)
-   ======================== */
 .base-select {
   padding: 1rem 0.8rem;
   font-size: 1.6rem;
@@ -135,9 +129,6 @@ const statusClass = computed(() => {
   }
 }
 
-/* ========================
-   Status Styles
-   ======================== */
 .base-select--focus {
   border-color: #64b5f6;
 }

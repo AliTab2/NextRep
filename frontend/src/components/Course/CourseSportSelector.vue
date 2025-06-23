@@ -13,7 +13,7 @@ export default {
   inject: ['errorInputs'],
   data() {
     return {
-      selectedSport: this.sport, // initial aus Prop setzen
+      selectedSport: this.sport,
       courses: coursesList.map((course) => ({ ...course })),
       isInvalid: false,
     }
@@ -26,11 +26,9 @@ export default {
       deep: true,
     },
     sport(newVal) {
-      // wenn die Prop extern aktualisiert wird
       this.selectedSport = newVal
     },
     selectedSport(newVal) {
-      // wenn intern geändert wird -> an Parent weitergeben
       this.$emit('update-sport', newVal)
     },
   },

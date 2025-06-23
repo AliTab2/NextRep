@@ -15,7 +15,7 @@ export function validateCourse(course) {
   if (
     !course ||
     typeof course.sport !== 'string' || course.sport.trim() === '' ||
-    typeof course.trainer !== 'string' || course.trainer.trim() === '' ||
+    // typeof course.trainer.name !== 'string' || course.trainer.name.trim() === '' ||
     typeof course.time !== 'object' || typeof course.time.hour !== 'number' || course.time.hour === 0 ||
     typeof course.time.duration !== 'number' || course.time.duration === 0 ||
     typeof course.date !== 'object' ||
@@ -26,11 +26,8 @@ export function validateCourse(course) {
     return false;
   }
 
-  // Interne Felder: Programmatisch gesetzt, aber gegen Missbrauch absichern
   if (
     typeof course.date.weekRange !== 'object' || !course.date.weekRange.start || !course.date.weekRange.end 
-    // || course.date.actualDate === null || typeof course.date.actualDate !== 'string' || !course.date.actualDate.trim() ||
-    // course.date.repeatUntil === null || typeof course.date.repeatUntil !== 'string' || !course.date.repeatUntil.trim()
   ) {
     return false;
   }

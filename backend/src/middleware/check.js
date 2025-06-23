@@ -19,7 +19,6 @@ export function checkRole(allowedRoles = []) {
         return res.status(403).json({})
       }
 
-      req.user = user
       next()
     } catch (err) {
       console.error('Fehler bei Rollenprüfung:', err)

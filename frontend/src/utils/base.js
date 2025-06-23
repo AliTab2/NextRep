@@ -61,7 +61,7 @@ const coursesWidgets = {
   Core: { color: '#4682B4', icon: 'fa-circle-notch' },
   'Body Balance': { color: '#2E8B57', icon: 'fa-leaf' },
   'Body Attack': { color: '#FF4500', icon: 'fa-running' },
-  Sandmann: { color: '#800080', icon: 'fa-fire' },
+  'Strength meets HIIT': { color: '#800080', icon: 'fa-fire' },
   'Defense Männer': { color: '#222222', icon: 'fa-shield-halved' },
   'Defense Frauen': { color: '#222222', icon: 'fa-shield-halved' },
   Defense: { color: '#222222', icon: 'fa-shield-halved' },
@@ -82,20 +82,20 @@ const courses = [
   { label: 'Core', value: 'Core' },
   { label: 'Body Balance', value: 'Body Balance' },
   { label: 'Body Attack', value: 'Body Attack' },
-  { label: 'Sandmann', value: 'Sandmann' },
+  { label: 'Strength meets HIIT', value: 'Strength meets HIIT' },
   { label: 'Defense Männer', value: 'Defense Männer' },
   { label: 'Defense Frauen', value: 'Defense Frauen' },
 ]
 
 const coursesHome = [
   { label: 'LMI Step', value: 'LMI Step' },
-  { label: 'Body Pump', value: 'Body Pump' },
-  { label: 'Body Combat', value: 'Body Combat' },
+  { label: 'Pump', value: 'Body Pump' },
+  { label: 'Combat', value: 'Body Combat' },
   { label: 'HIIT', value: 'HIIT' },
   { label: 'Core', value: 'Core' },
-  { label: 'Body Balance', value: 'Body Balance' },
-  { label: 'Body Attack', value: 'Body Attack' },
-  { label: 'Sandmann', value: 'Sandmann' },
+  { label: 'Balance', value: 'Body Balance' },
+  { label: 'Attack', value: 'Body Attack' },
+  { label: 'Strength meets HIIT', value: 'Strength meets HIIT' },
   // { label: 'Defense', value: 'Defense' },
 ]
 

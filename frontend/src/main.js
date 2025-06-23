@@ -23,7 +23,15 @@ import {
   faCircleUser,
   faArrowsRotate,
   faEnvelope,
+  faPaperPlane,
+  faClockRotateLeft,
+  faUsers,
+  faUser,
+  faUserCheck,
+  faUserLock,
 } from '@fortawesome/free-solid-svg-icons'
+
+import { faCalendarDays } from '@fortawesome/free-regular-svg-icons'
 
 import { faInstagram, faWhatsapp } from '@fortawesome/free-brands-svg-icons'
 
@@ -48,6 +56,13 @@ library.add(
   faEnvelope,
   faInstagram,
   faWhatsapp,
+  faPaperPlane,
+  faClockRotateLeft,
+  faUsers,
+  faUser,
+  faCalendarDays,
+  faUserCheck,
+  faUserLock,
 )
 import App from '@/App.vue'
 import router from '@/router/router.js'
@@ -64,6 +79,7 @@ import BaseCheckboxGroup from '@/components/Base/BaseCheckboxGroup.vue'
 import BaseSplitView from '@/components/Base/BaseSplitView.vue'
 import BaseCheckbox from '@/components/Base/BaseCheckbox.vue'
 import BaseLoader from '@/components/Base/BaseLoader.vue'
+import BaseListItem from '@/components/Base/BaseListItem.vue'
 
 const app = createApp(App)
 
@@ -80,10 +96,10 @@ app.component('BaseForm', BaseForm)
 app.component('BaseCheckboxGroup', BaseCheckboxGroup)
 app.component('BaseSplitView', BaseSplitView)
 app.component('BaseCheckbox', BaseCheckbox)
-
 app.component('BaseButton', BaseButton)
 app.component('BaseMessage', BaseMessage)
 app.component('BaseLoader', BaseLoader)
+app.component('BaseListItem', BaseListItem)
 
 import '@/assets/styles/base.css' // base.css importiert automatisch variables.css
 

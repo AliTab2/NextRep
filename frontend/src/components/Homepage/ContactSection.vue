@@ -1,5 +1,5 @@
 <template>
-  <SectionView backgroundColor="var(--color-primary-hover)">
+  <SectionView backgroundColor="#fff">
     <template #content>
       <h1 class="title">
         Scanne jetzt den QR-Code ein oder klicke auf den Link und werde zum
@@ -17,7 +17,7 @@
           <p class="contact-text">Oder über den <strong>QR-Code</strong></p>
           <img
             class="contact-qr"
-            src="@/assets/imgs/whatsapp_qr.png"
+            src="@/assets/imgs/extras/whatsapp_qr.png"
             alt="WhatsApp Groupe QR-Code"
           />
         </div>
@@ -44,7 +44,7 @@ export default {
 
 <style scoped>
 .title {
-  color: white;
+  color: #000;
   text-align: center;
   font-weight: bolder;
   margin-bottom: 4rem;
@@ -57,6 +57,10 @@ export default {
   width: 100%;
   color: white;
   gap: 2rem;
+  /* background-color: #f0f0f0; */
+  background-color: #db1200;
+  border-radius: 1rem;
+  padding: 2rem 0;
 }
 .contact-left {
   height: 100%;
@@ -77,12 +81,12 @@ export default {
 }
 
 .contact-text {
-  color: white;
+  color: #fff;
   font-size: 1.2rem;
 }
 
 .contact-link {
-  background-color: var(--color-primary);
+  background-color: #fff;
   padding: 2rem;
   border-radius: 1rem;
   margin-top: 2rem;
@@ -90,8 +94,12 @@ export default {
   gap: 2rem;
   align-items: center;
 }
+.contact-link a.contact-text {
+  color: #db1200;
+}
 .contact-icon {
   font-size: 2rem;
+  color: #db1200;
 }
 
 .contact-qr {

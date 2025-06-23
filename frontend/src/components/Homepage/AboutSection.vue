@@ -1,10 +1,10 @@
 <template>
-  <SectionView backgroundColor="var(--color-primary)">
+  <SectionView backgroundColor="#fff">
     <template #content>
       <h1 class="title">
         Wie ist <strong style="text-decoration: underline">NextRep</strong> entstanden?
       </h1>
-      <SectionView backgroundColor="#1a75d1">
+      <SectionView backgroundColor="#000">
         <template #content>
           <p class="about-text">
             Ich habe diese Webseite für euch entwickelt, um euch das Leben leichter zu machen!🎉
@@ -12,7 +12,7 @@
             die übersehen wurden… Ihr kennt das!
           </p>
           <div class="about-features">
-            <p class="about-text">
+            <p class="about-text about-features-title">
               Jetzt ist Schluss damit. Hier bekommt ihr
               <strong style="text-decoration: underline">alle</strong> Infos schnell und direkt an
               einem Ort:
@@ -61,7 +61,7 @@ export default {
 
 <style scoped>
 .title {
-  color: white;
+  color: #db1200;
   text-align: center;
   font-weight: bolder;
   /* font-style: italic; */
@@ -71,7 +71,7 @@ export default {
 }
 
 .about-text {
-  color: white;
+  color: #fff;
   font-size: 1.2rem;
   font-style: italic;
 }
@@ -83,17 +83,21 @@ export default {
 
 .about-features .about-text {
   font-style: normal;
-  /* font-weight: bold; */
+  color: #db1200;
+}
+
+.about-features .about-features-title {
+  color: #fff;
 }
 
 .about-list {
   list-style-type: none;
 }
 .about-listitem {
-  background-color: var(--color-primary);
+  background-color: #fff;
   margin-top: 1rem;
   padding: 1rem;
-  border-left: 5px solid var(--color-primary-hover);
+  border-left: 5px solid #db1200;
 }
 
 .about-text-bottom {

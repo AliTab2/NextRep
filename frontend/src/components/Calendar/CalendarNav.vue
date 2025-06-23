@@ -101,7 +101,7 @@ button {
   height: 2.5rem;
   border: none;
   border-radius: 0.75rem;
-  background-color: var(--color-primary);
+  background-color: #db1200;
   color: white;
   font-size: 1.5rem;
   cursor: pointer;

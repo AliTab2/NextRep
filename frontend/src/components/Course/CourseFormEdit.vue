@@ -1,9 +1,11 @@
 <template>
   <div class="add-course-page__form-wrapper">
-    <!-- Edit course -->
-    <base-form title="Sportkurs Bearbeiten" v-if="isEditing">
+    <base-form title="Sportkurs Bearbeiten">
       <CourseSportSelector @update-sport="updateCourseSport" :sport="courseObj.sport" />
-      <CourseTrainerSelector @update-trainer="updateCourseTrainer" :trainer="courseObj.trainer" />
+      <CourseTrainerSelector
+        @update-trainer="updateCourseTrainer"
+        :trainer="courseObj.trainer._id"
+      />
       <CourseDaySelector @update-day="updateCourseDay" :day="courseObj.date.weekDay" />
       <CourseTimeSelector
         @update-hour="updateCourseHour"
@@ -26,32 +28,12 @@
         @update-change="updateCourseTypeOfChange"
         change="once"
       />
-      <!-- <BaseCheckbox :option="{ label: 'Erinnerung', value: true }" v-model="reminder" /> -->
       <div class="btn-container">
         <base-button @click="updateEditedCourse" :is-loading="isLoading" :disabled="!hasChanged"
           >Aktualisieren</base-button
         >
         <base-button @click="navigate({ mode: 'back', fallback: '/calendar' })" variant="delete"
           >Abbrechen</base-button
-        >
-      </div>
-    </base-form>
-    <!-- Add Course -->
-    <base-form title="Sportkurs Registrierung" v-else>
-      <CourseSportSelector @update-sport="updateCourseSport" />
-      <CourseTrainerSelector @update-trainer="updateCourseTrainer" />
-      <CourseDaySelector @update-day="updateCourseDay" />
-      <CourseTimeSelector @update-hour="updateCourseHour" @update-minute="updateCourseMinutes" />
-      <CourseDurationSelector @update-duration="updateCourseDuration" />
-      <CourseStatusSelector @update-status="updateCourseStatus" />
-      <CourseRecurringSelector @update-recurring="updateCoursRecurring" />
-      <!-- <BaseCheckbox :option="{ label: 'Erinnerung', value: true }" v-model="reminder" />  -->
-      <div class="btn-container">
-        <base-button @click="addCourse" :is-loading="isLoading" :disabled="!hasChanged"
-          >Speichern</base-button
-        >
-        <base-button variant="delete" @click="navigate({ mode: 'back', fallback: '/calendar' })"
-          >Zurück</base-button
         >
       </div>
     </base-form>
@@ -115,34 +97,12 @@ export default {
     this.course = { ...this.courseObj }
     this.courseCopy = JSON.parse(JSON.stringify(this.course))
 
+    // console.log(this.courseObj)
+
     this.showRecurringSelector = this.course.date.recurring === false
     this.showChangeSelector = this.course.date.recurring === true
   },
   methods: {
-    async addCourse() {
-      const { invalid, invalidInputs } = checkCourse(this.course)
-
-      if (invalid) {
-        this.isInvalid = true
-        this.invalidInputs.value = invalidInputs
-        this.$emit('invalid-input', invalidInputs)
-        return
-      }
-
-      const actionKey = this.course.date.recurring ? 'add_recurring' : 'add_once'
-      const logObj = generateCourseLogObj(actionKey, this.course)
-
-      this.isLoading = true
-      const res = await this.addCourse_store(this.course, { ...logObj })
-      this.isLoading = false
-
-      if (res.error) {
-        this.$emit('error', res.message || 'Fehler beim Hinzufügen des Kurses')
-      } else {
-        this.$emit('success', 'Kurs wurde erfolgreich hinzugefügt')
-      }
-    },
-
     async updateEditedCourse() {
       const { invalid, invalidInputs } = checkCourse(this.course)
 
@@ -239,6 +199,8 @@ export default {
       }
     },
     async deleteCourse() {
+      console.log('called')
+
       // delete this and futre entries from mobile!
       if (this.deleteOptions?.isMobile && this.deleteOptions?.all) {
         this.changeOnlyThisEntry = false
@@ -314,8 +276,9 @@ export default {
       this.course.sport = value
       this.updateCourse()
     },
-    updateCourseTrainer(value) {
-      this.course.trainer = value
+    updateCourseTrainer(trainerId, trainerName) {
+      this.course.trainer._id = trainerId
+      this.course.trainer.name = trainerName
       this.updateCourse()
     },
     updateCourseDay(dayIndex, dayName) {

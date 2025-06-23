@@ -78,8 +78,8 @@ export default {
       this.navigate({
         mode: 'push',
         to: {
-          name: 'Admin',
-          query: { userId: this.user._id, userName: this.user.name },
+          name: 'AdminHistory',
+          query: { userId: this.user.id || this.user._id, userName: this.user.name },
         },
       })
     },
@@ -157,7 +157,6 @@ export default {
   color: #777;
   font-weight: 500;
   width: 30%;
-  /* background-color: blue; */
 }
 
 .value {
@@ -165,7 +164,6 @@ export default {
   font-weight: 400;
   text-align: right;
   width: 70%;
-  /* background-color: red; */
 }
 
 @media (min-width: 576px) {
@@ -184,18 +182,9 @@ export default {
     font-size: 1.3rem;
   }
 }
-/* @media (min-width: 1024px) {
-  .profile-name {
-    font-size: 1.8rem;
-  }
-  .info-row {
-    font-size: 1.4rem;
-  }
-} */
 
 .btn-container {
   width: 100%;
-  /* background-color: aqua; */
   display: flex;
   flex-direction: row;
   gap: 1rem;

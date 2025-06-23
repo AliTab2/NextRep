@@ -45,11 +45,13 @@
         @click="$emit('delete-course', { isMobile: !screenIsLarge, all: deleteAll[0] || false })"
         :is-loading="isLoading"
         class="btn-container__delete"
-        v-if="!['Calendar', 'AddCourse'].includes($route.name) && hasPermission('delete:course')"
+        v-if="
+          !['Calendar', 'AdminCourseAdd'].includes($route.name) && hasPermission('delete:course')
+        "
         >kurs Löschen</base-button
       >
       <base-button
-        v-else-if="!['Calendar', 'AddCourse'].includes($route.name)"
+        v-else-if="!['Calendar', 'AdminCourseAdd'].includes($route.name)"
         style="width: 100%"
         variant="delete"
         @click="navigate({ mode: 'back', fallback: '/calendar' })"
@@ -118,7 +120,11 @@ export default {
   methods: {
     goToEditCoursePage() {
       if (this.isExporting) return
-      this.navigate({ mode: 'push', to: { name: 'EditCourse', params: { id: this.courseId } } })
+      console.log('called')
+      this.navigate({
+        mode: 'push',
+        to: { name: 'AdminCourseEdit', params: { id: this.courseId } },
+      })
     },
     checkScreenSize() {
       this.screenIsLarge = window.innerWidth >= 1000

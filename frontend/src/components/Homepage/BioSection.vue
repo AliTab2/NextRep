@@ -1,7 +1,7 @@
 <template>
-  <SectionView backgroundColor="var(--color-primary-hover)">
+  <SectionView backgroundColor="#fff">
     <template #content>
-      <h1 class="title">Die Köpfe hinter dem Ganzen!</h1>
+      <h1 class="title">Das NextRep-Team!</h1>
       <div class="bio-wrapper">
         <div
           class="bio-box"
@@ -28,12 +28,12 @@
 
 <script>
 import SectionView from '@/components/Homepage/SectionView.vue'
-import aliImg from '@/assets/imgs/admins/ali_01.jpg'
-import kaiImg from '@/assets/imgs/admins/kai_01.jpg'
-import maikImg from '@/assets/imgs/admins/maik_01.jpg'
-import avaImg from '@/assets/imgs/admins/ava_01.jpg'
-import yvonneImg from '@/assets/imgs/admins/yvonne_02.jpg'
-import ventImg from '@/assets/imgs/ventilator/01.jpg'
+import aliImg from '@/assets/imgs/admins/ali.png'
+import kaiImg from '@/assets/imgs/admins/kai.png'
+import maikImg from '@/assets/imgs/admins/maik.png'
+import avaImg from '@/assets/imgs/admins/eva.png'
+import yvonneImg from '@/assets/imgs/admins/yvonne.png'
+import tiniImg from '@/assets/imgs/admins/tini.png'
 
 export default {
   components: {
@@ -70,18 +70,18 @@ export default {
           courses: 'Body Pump',
         },
         {
+          name: 'Tini',
+          pos: 'Trainerin',
+          desc: 'Boxen ohne Körperkontakt, aber mit jeder Menge Power - Ausdauer, Koordination und Beweglichkeit für den perfekten Ausgleich für Kopf und Körper. Seit 2012 dabei, seit 2024 selbst Trainerin für BodyCombat.',
+          img: tiniImg,
+          courses: 'Body Combat',
+        },
+        {
           name: 'Maik',
           pos: 'Trainer',
           desc: 'Von der Matte zum Mikrofon - seit über 10 Jahren am Puls, seit 5 Jahren als Trainer mit vollem Einsatz! Auf in die nächste Runde für starke Muskeln und pure Ausdauer.',
           img: maikImg,
           courses: 'Body Pump | HIIT | Core',
-        },
-        {
-          name: 'Tini',
-          pos: 'Trainerin',
-          desc: 'Boxen ohne Körperkontakt, aber mit jeder Menge Power - Ausdauer, Koordination und Beweglichkeit für den perfekten Ausgleich für Kopf und Körper. Seit 2012 dabei, seit 2024 selbst Trainerin für BodyCombat.',
-          img: ventImg,
-          courses: 'Body Combat',
         },
       ],
     }
@@ -100,7 +100,7 @@ export default {
 }
 
 .title {
-  color: white;
+  color: #db1200;
   text-align: center;
   font-weight: bolder;
   margin-bottom: 4rem;
@@ -114,17 +114,12 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-color: var(--color-primary-hover);
-  color: white;
+  background-color: #000;
   padding: 1.5rem;
   border-radius: 1rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.25s;
-}
-
-.bio-box:hover {
-  background-color: var(--color-primary);
 }
 
 .bio-img-wrapper {
@@ -145,11 +140,12 @@ export default {
 .bio-name {
   font-weight: 600;
   margin-bottom: 0.5rem;
+  color: #fff;
 }
 
 .bio-pos {
   font-weight: 500;
-  color: var(--color-accent, #ffe600);
+  color: red;
   margin-bottom: 1rem;
 }
 
@@ -160,18 +156,28 @@ export default {
   align-items: flex-start;
   justify-content: center;
   padding: 0.5rem;
+  border-radius: 1rem;
 }
 
 .bio-desc {
   font-size: 0.95rem;
   font-style: italic;
-  color: #f0f0f0;
+  color: #888;
   line-height: 1.4;
 }
 
 .bio-text {
-  color: white;
+  /* color: #000; */
   font-size: 1.2rem;
+}
+
+.bio-courses {
+  background-color: #000;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.bio-courses > p {
+  color: #fff;
 }
 
 @media (min-width: 576px) {
@@ -183,13 +189,17 @@ export default {
     font-size: 1.3rem;
   }
   .bio-box {
-    width: calc(100% / 2);
+    width: calc((100% - 1rem) / 2);
+    aspect-ratio: 1 / 2;
   }
 }
 @media (min-width: 768px) {
   .title {
     margin-bottom: 8rem;
     font-size: 3rem;
+  }
+  .bio-box {
+    aspect-ratio: 1 / 1.5;
   }
   .bio-text {
     font-size: 1.4rem;
@@ -209,16 +219,21 @@ export default {
   }
   .bio-box {
     width: calc((100% - 2rem) / 3);
+    aspect-ratio: 1 / 2;
   }
 }
 
-/* Standardmäßig soll Ali zuerst kommen */
+@media (min-width: 1280px) {
+  .bio-box {
+    aspect-ratio: 1/1;
+  }
+}
+
 .ali-order {
   order: -1;
 }
 
-/* Ab mittlerer Größe soll Ali in die Mitte */
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .ali-order {
     order: 0;
   }

@@ -16,12 +16,12 @@
           v-for="course in dayCourses"
           :key="course._id"
           :sport="course.sport"
+          :trainer="course.trainer.name"
           :hour="course.time.hour"
           :minutes="course.time.minutes"
           :duration="course.time.duration"
           :status="course.status"
           :course-id="course._id"
-          :trainer="course.trainer"
           :weekDay="index"
           :weekRange="course.date.weekRange"
         />
@@ -79,6 +79,8 @@ export default {
       this.statusMessage = message
       this.statusType = status
     }
+
+    console.log(this.courses)
   },
   methods: {
     async exportDay(event) {
@@ -147,8 +149,6 @@ export default {
   computed: {
     ...mapState(useCourseStore, ['courses', 'weekRange', 'isExporting']),
     groupedCoursesByDay() {
-      // return groupCoursesByDay(this.courses, this.weekRange)
-
       return groupCoursesByDay(this.courses, this.weekRange).map((dayCourses) =>
         dayCourses.sort((a, b) => {
           const aTime = a.time.hour * 60 + a.time.minutes

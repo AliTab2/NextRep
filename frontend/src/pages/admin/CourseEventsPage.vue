@@ -1,33 +1,27 @@
 <template>
   <div class="courses__container">
     <div class="courses__title-container">
-      <h1 class="courses__title">{{ listTitle }}</h1>
+      <h1 class="courses__title">{{ listLabel }}</h1>
       <base-button v-if="hasPermission('add:course')" @click="goToAddCoursePage"
         >Neuer Kurs</base-button
       >
     </div>
 
     <ul class="courses__list">
-      <CoursesListItem v-for="course in filteredCourses" :key="course._id" :course="course" />
+      <CourseListItem v-for="course in courses" :key="course._id" :course="course" />
     </ul>
   </div>
 </template>
 
 <script>
-import CoursesListItem from '@/components/Course/CoursesListItem.vue'
 import { usePermission } from '@/composables/usePermission.js'
-import useUserStore from '@/stores/userStore'
-import { mapState } from 'pinia'
+import useCourseStore from '@/stores/courseStore'
+import { mapActions } from 'pinia'
+import CourseListItem from '@/components/Course/CourseListItem.vue'
 
 export default {
   components: {
-    CoursesListItem,
-  },
-  props: {
-    courses: {
-      type: Array,
-      default: () => [],
-    },
+    CourseListItem,
   },
   setup() {
     const { hasPermission } = usePermission()
@@ -36,25 +30,32 @@ export default {
       hasPermission,
     }
   },
-  computed: {
-    ...mapState(useUserStore, ['user']),
-    filteredCourses() {
-      if (this.hasPermission('view:registered-courses')) return this.courses
-      else {
-        return this.courses.filter((c) => c.trainer.toLowerCase() === this.user.name.toLowerCase())
-      }
-    },
-    listTitle() {
-      if (this.hasPermission('view:registered-courses') && this.courses.length > 0)
-        return `Kurstermine (${this.courses.length})`
-      else if (this.courses.length > 0)
-        return `Meine Kurstermine (${this.courses.filter((c) => c.trainer.toLowerCase() === this.user.name.toLowerCase()).length})`
-      else return 'Keine Kurstermine gefunden!'
-    },
+  data() {
+    return {
+      courses: [],
+    }
+  },
+  async created() {
+    if (this.hasPermission('view:registered-courses')) {
+      const events = await this.getCourses_store()
+      this.courses = events.data
+    } else {
+      const events = await this.getUserCourses_store()
+      this.courses = events.data
+    }
   },
   methods: {
+    ...mapActions(useCourseStore, ['getUserCourses_store', 'getCourses_store']),
     goToAddCoursePage() {
-      this.$router.push({ name: 'AddCourse' })
+      this.$router.push({ name: 'AdminCourseAdd' })
+    },
+  },
+  computed: {
+    listLabel() {
+      if (this.courses.length === 0) return 'Keine Kurstermine gefunden!'
+      if (this.hasPermission('view:registered-courses'))
+        return `Kurstermine (${this.courses.length})`
+      else return `Meine Kurstermine (${this.courses.length})`
     },
   },
 }
@@ -69,7 +70,6 @@ export default {
   list-style: none;
   width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  /* border-radius: 1rem; */
 }
 
 @media (min-width: 768px) {

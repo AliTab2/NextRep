@@ -3,7 +3,6 @@
 </template>
 
 <script>
-// import { coursesList } from '@/utils/base.js'
 export default {
   props: {
     change: String,
@@ -11,7 +10,7 @@ export default {
   inject: ['errorInputs'],
   data() {
     return {
-      selectedChange: this.change, // initial aus Prop setzen
+      selectedChange: this.change,
       options: [
         { label: 'Nur dieser Termin', value: 'once' },
         { label: 'Dieser und alle weiteren Termine', value: 'all' },

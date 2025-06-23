@@ -14,7 +14,7 @@
         <div
           class="hero-slide"
           :style="{
-            backgroundImage: `linear-gradient(0deg, rgba(201, 104, 200, 0.6) 50%, rgba(100, 181, 246, 0.7) 100%), url(${slide.image})`,
+            backgroundImage: `linear-gradient(0deg, rgba(219, 18, 0, 0.7) 0%, rgba(255,255,255,0.3) 100%), url(${slide.image})`,
           }"
         />
       </swiper-slide>
@@ -51,17 +51,17 @@ export default {
     return {
       slides: [
         {
-          image: new URL('@/assets/imgs/corner/h_04.jpg', import.meta.url).href,
+          image: new URL('@/assets/imgs/homepage/corner/h_04.jpg', import.meta.url).href,
           // title: 'NextRep',
           // subtitle: 'Wo die nächste Wiederholung auf den nächsten Takt schwebt',
         },
         {
-          image: new URL('@/assets/imgs/poster/h_04.jpg', import.meta.url).href,
+          image: new URL('@/assets/imgs/homepage/poster/h_04.jpg', import.meta.url).href,
           // title: 'Push dich weiter',
           // subtitle: 'Trainiere mit Energie und System',
         },
         {
-          image: new URL('@/assets/imgs/mirror/h_01.jpg', import.meta.url).href,
+          image: new URL('@/assets/imgs/homepage/mirror/h_01.jpg', import.meta.url).href,
           // title: 'Dein Rhythmus',
           // subtitle: 'Smart. Digital. Effektiv.',
         },

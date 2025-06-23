@@ -1,10 +1,6 @@
 <template>
   <div class="history-filter">
-    <base-input placeholder="Einfach tippen!" label="Filter" v-model="searchTerm">
-      <!-- <template #append>
-        <base-button @click="filterEntries">Anwenden</base-button>
-      </template> -->
-    </base-input>
+    <base-input placeholder="Einfach tippen!" label="Filter" v-model="searchTerm"></base-input>
   </div>
 </template>
 

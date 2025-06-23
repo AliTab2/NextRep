@@ -1,9 +1,12 @@
 <template>
   <header class="app-header">
     <div class="app-header__container">
-      <h1 class="app-header__title" @click="navigate({ mode: 'push', to: { name: 'Home' } })">
-        NextRep
-      </h1>
+      <div class="app-header__brand">
+        <h1 class="app-header__title" @click="navigate({ mode: 'push', to: { name: 'Home' } })">
+          NextRep
+        </h1>
+        <p class="app-header__subtitle">CleverFit-Kurse</p>
+      </div>
 
       <CalendarNav
         v-if="showCalNav"
@@ -69,12 +72,15 @@ export default {
       navActions: [
         {
           label: 'Neuer Kurs',
-          to: { name: 'AddCourse' },
-          condition: () => this.hasPermission('add:course'),
+          to: { name: 'AdminCourseAdd' },
+          condition: () =>
+            this.hasPermission('add:course') &&
+            this.$route.name !== 'AdminCourseAdd' &&
+            this.$route.name !== 'AdminCourseEdit',
         },
         {
           label: 'Einstellungen',
-          to: { name: 'Admin' },
+          to: { name: 'AdminDashboard' },
           variant: 'dropdown',
           condition: () => this.hasPermission('access:settings'),
         },
@@ -154,13 +160,22 @@ export default {
 }
 
 .app-header__container {
-  height: 6rem;
+  height: 7rem;
   padding: 0 var(--space-md);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: var(--space-sm);
+}
+
+.app-header__brand {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .app-header__title {
@@ -171,6 +186,12 @@ export default {
   align-items: center;
   margin-bottom: 0;
   cursor: pointer;
+}
+
+.app-header__subtitle {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #db1200;
 }
 
 .app-header__calendar-nav {

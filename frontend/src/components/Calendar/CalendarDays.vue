@@ -58,7 +58,6 @@ export default {
   margin: 0;
   padding: 0;
   height: auto;
-
   position: sticky;
   top: 0;
   z-index: 10;

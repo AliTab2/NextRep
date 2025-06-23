@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { mapState } from 'pinia'
+import { mapActions } from 'pinia'
 import useUserStore from '@/stores/userStore.js'
 
 export default {
@@ -15,14 +15,21 @@ export default {
     return {
       selectedTrainer: this.trainer,
       isInvalid: false,
+      users: [],
     }
   },
+  async created() {
+    const allUsers = await this.getUsers_store()
+    this.users = allUsers.data
+  },
+  methods: {
+    ...mapActions(useUserStore, ['getUsers_store']),
+  },
   computed: {
-    ...mapState(useUserStore, ['users']),
     trainers() {
       return this.users
         .filter((u) => u.roles.includes('trainer'))
-        .map((trainer) => ({ label: trainer.name, value: trainer.name }))
+        .map((trainer) => ({ label: trainer.name, value: trainer._id }))
     },
   },
   watch: {
@@ -35,8 +42,9 @@ export default {
     trainer(newVal) {
       this.selectedTrainer = newVal
     },
-    selectedTrainer(newVal) {
-      this.$emit('update-trainer', newVal)
+    selectedTrainer(trainerId) {
+      const trainer = this.users.find((u) => u._id.toString() === trainerId.toString())
+      this.$emit('update-trainer', trainerId, trainer.name)
     },
   },
 }

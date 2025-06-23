@@ -19,7 +19,6 @@ export default {
 </script>
 
 <style scoped>
-/* Container – mobile-first */
 .base-form {
   width: 100%;
   max-width: 100%;
@@ -35,7 +34,6 @@ export default {
   text-align: center;
 }
 
-/* Titel-Styling */
 .base-form__title {
   font-size: 2rem;
   font-weight: 700;
@@ -55,7 +53,6 @@ export default {
   }
 }
 
-/* Slot-Bereich (Formularinhalt) */
 .base-form__content {
   display: flex;
   flex-direction: column;

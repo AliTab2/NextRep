@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { createUser, deleteUser, getUsers, login, updateUser } from '@/api/userApi.js'
+import { createUser, deleteUser, getOneUser, getUsers, login, updateUser } from '@/api/userApi.js'
 import { handleApiResponse, buildErrorResponse } from '@/api/on'
 import { renderLogMessage, logTemplates } from '@/utils/logging'
 import { useHistoryStore } from './historyStore'
@@ -17,7 +17,6 @@ const useUserStore = defineStore('user', {
     },
     isLoggedIn: false,
     users: [],
-    token: null,
   }),
   getters: {
     mainRole: (state) => state.user.roles.filter((r) => r !== 'trainer')[0],
@@ -56,11 +55,11 @@ const useUserStore = defineStore('user', {
       }
     },
     logout_store() {
-      const logObj = generateAdminLogObj('logout', {
-        target_role: this.mainRole,
-        target_name: this.user.name,
-      })
-      this.logUserAction(logObj.actionKey, logObj)
+      // const logObj = generateAdminLogObj('logout', {
+      //   target_role: this.mainRole,
+      //   target_name: this.user.name,
+      // })
+      // this.logUserAction(logObj.actionKey, logObj)
       this.user = {
         id: null,
         name: '',
@@ -116,10 +115,22 @@ const useUserStore = defineStore('user', {
         return buildErrorResponse()
       }
     },
-
     async getUsers_store() {
       try {
         const res = await getUsers(this.user.id)
+        const result = await handleApiResponse(res, 'Nutzer Laden werden')
+        if (!result.error) {
+          this.users = result.data
+        }
+        return result
+      } catch (err) {
+        console.error('Fehler beim Nutzer laden:', err)
+        return buildErrorResponse()
+      }
+    },
+    async getOneUser_store() {
+      try {
+        const res = await getOneUser(this.user.id)
         const result = await handleApiResponse(res, 'Nutzer Laden werden')
         if (!result.error) {
           this.users = result.data

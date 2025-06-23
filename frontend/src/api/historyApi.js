@@ -1,4 +1,5 @@
 const BASE_URL = 'https://nextrep-gjus.onrender.com/api/history'
+// const BASE_URL = 'http://localhost:3000/api/history'
 
 export async function getAllHistory() {
   const res = await fetch(BASE_URL)

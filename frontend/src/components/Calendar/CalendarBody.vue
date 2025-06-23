@@ -19,7 +19,7 @@ export default {
 
 <style scoped>
 .glass {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255);
   backdrop-filter: blur(0.5rem);
   -webkit-backdrop-filter: blur(1rem);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -44,7 +44,7 @@ export default {
   display: none;
 }
 .calendar-body {
-  -ms-overflow-style: none; /* IE + Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>

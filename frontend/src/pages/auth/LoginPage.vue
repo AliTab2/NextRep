@@ -97,7 +97,7 @@ watch(code, async () => {
     statusMessage.value = 'Login erfolgreich!'
     statusType.value = 'success'
     setTimeout(() => {
-      router.push({ name: 'Admin' })
+      router.push({ name: 'AdminDashboard' })
     }, 1000)
   }
 })

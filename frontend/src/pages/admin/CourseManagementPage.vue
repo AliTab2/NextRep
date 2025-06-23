@@ -13,7 +13,7 @@
       <template #right>
         <CalendarEventCard
           :sport="course.sport"
-          :trainer="course.trainer"
+          :trainer="course.trainer.name"
           :hour="course.time.hour"
           :minutes="course.time.minutes"
           :duration="course.time.duration"
@@ -28,9 +28,9 @@
       </template>
 
       <template #left>
-        <CourseForm
+        <CourseFormEdit
+          v-if="isEditing"
           :courseObj="course"
-          :isEditing="isEditing"
           @update-course="updateCourse"
           @invalid-input="handleInvalid"
           @error="handleError"
@@ -39,12 +39,20 @@
           :delete-options="deleteOptions"
           @course-deleted="handleCourseDeleted"
         />
+        <CourseFormAdd
+          v-else
+          :courseObj="course"
+          @update-course="updateCourse"
+          @invalid-input="handleInvalid"
+          @error="handleError"
+          @success="handleSuccess"
+        />
       </template>
     </BaseSplitView>
     <div class="course-preview" v-else>
       <CalendarEventCard
         :sport="course.sport"
-        :trainer="course.trainer"
+        :trainer="course.trainer.name"
         :hour="course.time.hour"
         :minutes="course.time.minutes"
         :duration="course.time.duration"
@@ -64,7 +72,8 @@
 
 <script>
 import CalendarEventCard from '@/components/Calendar/CalendarEventCard.vue'
-import CourseForm from '@/components/Course/CourseForm.vue'
+import CourseFormAdd from '@/components/Course/CourseFormAdd.vue'
+import CourseFormEdit from '@/components/Course/CourseFormEdit.vue'
 
 import { mapState, mapActions } from 'pinia'
 import useCourseStore from '@/stores/courseStore.js'
@@ -75,7 +84,8 @@ import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 export default {
   components: {
     CalendarEventCard,
-    CourseForm,
+    CourseFormAdd,
+    CourseFormEdit,
   },
   setup() {
     const { hasPermission } = usePermission()
@@ -105,7 +115,7 @@ export default {
       this.isEditing = true
       const foundCourse = this.courses.find((c) => c._id === courseId)
       if (foundCourse) {
-        this.course = JSON.parse(JSON.stringify(foundCourse)) // deep copy
+        this.course = JSON.parse(JSON.stringify(foundCourse))
       } else {
         this.navigate({ mode: 'push', to: { name: 'Calendar' } })
       }

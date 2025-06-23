@@ -10,7 +10,6 @@
 </template>
 
 <script>
-// import SectionView from '@/components/Homepage/SectionView.vue'
 import { coursesList, coursesWidgetsList } from '@/utils/base.js'
 import HeroSection from '@/components/Homepage/HeroSection.vue'
 import CoursesSection from '@/components/Homepage/CoursesSection.vue'

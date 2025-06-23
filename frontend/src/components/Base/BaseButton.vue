@@ -89,12 +89,12 @@ defineEmits(['click'])
 }
 
 .base-button--default {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: #222;
+  color: #fff;
 }
 
 .base-button--default:hover {
-  background-color: var(--color-primary-hover);
+  background-color: gray;
 }
 
 .base-button--dropdown {

@@ -31,7 +31,7 @@ export default {
   aspect-ratio: 9/16;
   display: flex;
   flex-direction: column;
-  background-image: url('@/assets/imgs/flyer-bg.jpg');
+  background-image: url('@/assets/imgs/extras/flyer-bg.jpg');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: top;

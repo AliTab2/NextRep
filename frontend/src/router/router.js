@@ -7,48 +7,86 @@ const router = createRouter({
     {
       path: '/',
       name: 'Calendar',
-      component: () => import('@/views/CalendarPage.vue'),
-    },
-    { path: '/home', name: 'Home', component: () => import('@/views/HomePage.vue') },
-    {
-      path: '/course/add',
-      name: 'AddCourse',
-      component: () => import('@/views/CoursePage.vue'),
-      meta: { allowedRoles: ['superadmin', 'admin'] },
+      component: () => import('@/pages/main/CalendarPage.vue'),
     },
     {
-      path: '/course/edit/:id',
-      name: 'EditCourse',
-      component: () => import('@/views/CoursePage.vue'),
+      path: '/home',
+      name: 'Home',
+      component: () => import('@/pages/main/HomePage.vue'),
     },
     {
-      path: '/user',
-      name: 'Admin',
-      component: () => import('@/views/AdminPage.vue'),
-      meta: { allowedRoles: ['superadmin', 'admin'] },
+      path: '/auth/login',
+      name: 'Auth',
+      component: () => import('@/pages/auth/LoginPage.vue'),
     },
-    {
-      path: '/user/add',
-      name: 'AddUser',
-      component: () => import('@/views/UserPage.vue'),
-      meta: { allowedRoles: ['superadmin'] },
-    },
-    {
-      path: '/user/edit/:id',
-      name: 'EditUser',
-      component: () => import('@/views/UserPage.vue'),
-      meta: { allowedRoles: ['superadmin', 'admin'] },
-    },
-    { path: '/auth/login', name: 'Auth', component: () => import('@/views/AuthPage.vue') },
     {
       path: '/legal-notice',
       name: 'LegalNotice',
-      component: () => import('@/views/LegalNotice.vue'),
+      component: () => import('@/pages/legal/LegalNoticePage.vue'),
     },
     {
       path: '/privacy-policy',
       name: 'PrivacyPolicy',
-      component: () => import('@/views/PrivacyPolicy.vue'),
+      component: () => import('@/pages/legal/PrivacyPolicyPage.vue'),
+    },
+    {
+      path: '/admin',
+      // meta: { allowedRoles: ['superadmin', 'admin'] },
+      children: [
+        {
+          path: 'dashboard',
+          name: 'AdminDashboard',
+          meta: { allowedRoles: ['superadmin', 'admin'] },
+          component: () => import('@/pages/admin/AdminDashboardPage.vue'),
+        },
+        {
+          path: 'courses/add',
+          name: 'AdminCourseAdd',
+          meta: { allowedRoles: ['superadmin', 'admin'] },
+          component: () => import('@/pages/admin/CourseManagementPage.vue'),
+        },
+        {
+          path: 'courses/edit/:id',
+          name: 'AdminCourseEdit',
+          component: () => import('@/pages/admin/CourseManagementPage.vue'),
+        },
+        {
+          path: 'users/add',
+          name: 'AdminUserAdd',
+          meta: { allowedRoles: ['superadmin'] },
+          component: () => import('@/pages/admin/UserManagementPage.vue'),
+        },
+        {
+          path: 'users/edit/:id',
+          name: 'AdminUserEdit',
+          meta: { allowedRoles: ['superadmin'] },
+          component: () => import('@/pages/admin/UserManagementPage.vue'),
+        },
+        {
+          path: 'events',
+          name: 'AdminEvents',
+          meta: { allowedRoles: ['superadmin', 'admin'] },
+          component: () => import('@/pages/admin/CourseEventsPage.vue'),
+        },
+        {
+          path: 'notifications',
+          name: 'AdminNotifications',
+          meta: { allowedRoles: ['superadmin', 'admin'] },
+          component: () => import('@/pages/admin/NotificationsPage.vue'),
+        },
+        {
+          path: 'history',
+          name: 'AdminHistory',
+          meta: { allowedRoles: ['superadmin', 'admin'] },
+          component: () => import('@/pages/admin/HistoryPage.vue'),
+        },
+        {
+          path: 'accounts',
+          name: 'AdminAccounts',
+          meta: { allowedRoles: ['superadmin', 'admin'] },
+          component: () => import('@/pages/admin/AccountsPage.vue'),
+        },
+      ],
     },
   ],
   scrollBehavior() {
@@ -64,11 +102,6 @@ router.beforeEach((to, from, next) => {
 
   if (from.path !== to.path) {
     to.meta.from = from.path
-  }
-
-  // 🆕 Redirect-Handling
-  if (to.path === '/' && to.query.redirect === 'calendar') {
-    return next({ name: 'Calendar' })
   }
 
   // blocked users first

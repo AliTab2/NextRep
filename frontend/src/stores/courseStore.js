@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia'
 import useUserStore from './userStore'
 import { renderLogMessage, logTemplates } from '@/utils/logging'
-import { getCourses, createCourse, updateCourse, deleteCourse } from '@/api/courseApi.js'
+import {
+  getCourses,
+  getUserCourses,
+  createCourse,
+  updateCourse,
+  deleteCourse,
+} from '@/api/courseApi.js'
 import { handleApiResponse, buildErrorResponse } from '@/api/on'
 import { useHistoryStore } from './historyStore'
 
@@ -96,16 +102,29 @@ const useCourseStore = defineStore('courses', {
         if (!result.error && logObj) {
           this.logCourseAction(logObj.actionKey, logObj)
         }
+
         return result
       } catch (err) {
         console.error('Fehler beim Löschen des Kurses:', err)
         return buildErrorResponse()
       }
     },
-
     async getCourses_store() {
       try {
         const res = await getCourses()
+        const result = await handleApiResponse(res, 'Kurse Laden fehlgeschlagen')
+        if (!result.error) {
+          this.courses = result.data
+        }
+        return result
+      } catch (err) {
+        console.error('Fehler beim Laden der Kurse:', err)
+        return buildErrorResponse()
+      }
+    },
+    async getUserCourses_store() {
+      try {
+        const res = await getUserCourses(this.userId)
         const result = await handleApiResponse(res, 'Kurse Laden fehlgeschlagen')
         if (!result.error) {
           this.courses = result.data

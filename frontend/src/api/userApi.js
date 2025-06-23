@@ -1,7 +1,17 @@
 const BASE_URL = 'https://nextrep-gjus.onrender.com/api/users'
+// const BASE_URL = 'http://localhost:3000/api/users'
 
 export async function getUsers(adminId) {
   const res = await fetch(BASE_URL, {
+    headers: {
+      'x-user-id': adminId,
+    },
+  })
+  return res
+}
+
+export async function getOneUser(adminId) {
+  const res = await fetch(BASE_URL + '/user', {
     headers: {
       'x-user-id': adminId,
     },

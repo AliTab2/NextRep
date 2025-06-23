@@ -1,11 +1,11 @@
 <template>
-  <SectionView backgroundColor="var(--color-primary)">
+  <SectionView backgroundColor="#f0f0f0">
     <template #content>
       <div class="thanks-wrapper">
         <p class="text">
-          Ein besonderes Dankeschön an meinen älteren Bruder Omar, der mir geholfen hat, die Texte
-          auf der Homepage zu formulieren, und an meinen jüngeren Bruder Moaaz, der die Fotos für
-          die Homepage gemacht hat!
+          Ein besonderes Dankeschön an meinen älteren Bruder <strong>Omar</strong>, der mir geholfen
+          hat, die Texte auf der Homepage zu formulieren, und an meinen jüngeren Bruder
+          <strong>Moaaz</strong>, der die Fotos für die Homepage gemacht hat!
         </p>
       </div>
       <ul class="footer-list">
@@ -31,21 +31,18 @@ export default {
 
 <style scoped>
 .text {
-  color: white;
+  color: #000;
   font-size: 1.2rem;
-  /* font-style: italic; */
 }
 
 .thanks-wrapper {
-  background-color: var(--color-primary);
   margin-top: 1rem;
   padding: 1rem;
-  border-left: 5px solid var(--color-primary-hover);
+  border-left: 5px solid #db1200;
 }
 
 .footer-list {
   list-style-type: none;
-  /* background-color: red; */
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -53,7 +50,7 @@ export default {
 }
 
 .footer-item a {
-  color: white;
+  color: #000;
 }
 
 @media (min-width: 576px) {

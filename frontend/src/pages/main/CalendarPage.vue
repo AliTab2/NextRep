@@ -21,10 +21,7 @@ export default {
   flex-direction: column;
   padding-bottom: 2rem;
   position: relative;
-
-  background-image:
-    linear-gradient(0deg, rgba(201, 104, 200, 0.6) 50%, rgba(100, 181, 246, 0.7) 100%),
-    url(@/assets/imgs/mirror/h_01.jpg);
+  background-color: #db1200;
   background-size: cover;
   background-position: center;
   z-index: 0;

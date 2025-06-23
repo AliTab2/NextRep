@@ -1,18 +1,21 @@
 <template>
-  <SectionView backgroundColor="var(--color-primary)">
+  <SectionView backgroundColor="#fff">
     <template #content>
-      <!-- <h1 class="title">
-        Auf <strong style="text-decoration: underline">8 verschiedene</strong> Wege kannst Du den
-        nächsten <strong>Rep</strong> treffen!
-      </h1> -->
       <h1 class="title">
         Auf <strong style="text-decoration: underline">8 verschiedene</strong> Wege könnt ihr den
         nächsten <strong>Rep</strong> treffen!
       </h1>
       <div class="courses-wrapper">
         <div class="course-box" v-for="c in courses" :key="c.label">
-          <font-awesome-icon class="icon" :icon="coursesWidgets[c.label].icon"></font-awesome-icon>
-          <p>{{ c.label }}</p>
+          <div class="course-box__icon">
+            <font-awesome-icon
+              class="icon"
+              :icon="coursesWidgets[c.value].icon"
+            ></font-awesome-icon>
+          </div>
+          <div class="course-box__text">
+            <p>{{ c.label }}</p>
+          </div>
         </div>
       </div>
     </template>
@@ -45,37 +48,46 @@ export default {
 }
 
 .title {
-  color: white;
+  color: #000;
   text-align: center;
   font-weight: bolder;
   font-style: italic;
-
   margin-bottom: 4rem;
   font-size: 2rem;
 }
 
 .course-box {
-  width: calc((100% - 6rem) / 4);
+  width: calc((100% - 2rem) / 2);
   aspect-ratio: 1/1;
-  background-color: #1a75d1;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  color: var(--color-primary-hover);
+  display: flex;
+  flex-direction: column;
+}
+
+.course-box__icon {
+  width: 100%;
+  height: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
-  color: var(--color-primary-hover);
-  padding: 1rem;
-  gap: 0.5rem;
+  justify-content: center;
+  color: #db1200;
+  font-size: 5rem;
+}
+
+.course-box__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.7rem;
   text-align: center;
 }
-.course-box .icon {
-  color: var(--color-primary-hover);
-  font-size: 2.5rem;
-}
 .course-box p {
-  color: whitesmoke;
-  font-weight: bold;
-  font-size: 1.2rem;
+  text-align: center;
 }
 
 @media (min-width: 576px) {
@@ -83,10 +95,13 @@ export default {
     margin-bottom: 6rem;
     font-size: 2.5rem;
   }
-  .course-box .icon {
-    font-size: 4.5rem;
+  .course-box {
+    width: calc((100% - 6rem) / 4);
   }
-  .course-box p {
+  .course-box__icon {
+    font-size: 4rem;
+  }
+  .course-box__text {
     font-size: 1.5rem;
   }
 }
@@ -95,11 +110,11 @@ export default {
     margin-bottom: 8rem;
     font-size: 3rem;
   }
-  .course-box .icon {
-    font-size: 5.5rem;
+  .course-box__icon {
+    font-size: 5rem;
   }
-  .course-box p {
-    font-size: 2rem;
+  .course-box__text {
+    font-size: 1.7rem;
   }
 }
 @media (min-width: 1024px) {
@@ -107,10 +122,22 @@ export default {
     margin-bottom: 8rem;
     font-size: 4rem;
   }
-  .course-box .icon {
+  .course-box__icon {
+    font-size: 6rem;
+  }
+  .course-box__text {
+    font-size: 2rem;
+  }
+}
+@media (min-width: 1280px) {
+  .title {
+    margin-bottom: 8rem;
+    font-size: 4rem;
+  }
+  .course-box__icon {
     font-size: 8rem;
   }
-  .course-box p {
+  .course-box__text {
     font-size: 3.5rem;
   }
 }
