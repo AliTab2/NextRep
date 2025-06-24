@@ -1,25 +1,31 @@
 <template>
   <div class="users__container">
-    <div class="users__title-container">
-      <h1 class="users__title">{{ listLabel }}</h1>
-      <base-button v-if="hasPermission('create:admin')" @click="goToAddUserPage"
-        >Neues Konto</base-button
-      >
-    </div>
+    <BaseLoader v-if="isLoading" />
 
-    <ul class="users__list">
-      <BaseListItem
-        v-for="user in accounts"
-        :key="user._id"
-        :label="user.name"
-        :status="{
-          icon: user.isBlocked ? 'fa-solid fa-user-lock' : 'fa-solid fa-user-check',
-          color: user.isBlocked ? '#db1200' : 'lightgreen',
-        }"
-        :meta="user.roles.join(', ')"
-        @click="navigate({ mode: 'push', to: { name: 'AdminUserEdit', params: { id: user._id } } })"
-      />
-    </ul>
+    <div v-else>
+      <div class="users__title-container">
+        <h1 class="users__title">{{ listLabel }}</h1>
+        <base-button v-if="hasPermission('create:admin')" @click="goToAddUserPage"
+          >Neues Konto</base-button
+        >
+      </div>
+
+      <ul class="users__list">
+        <BaseListItem
+          v-for="user in accounts"
+          :key="user._id"
+          :label="user.name"
+          :status="{
+            icon: user.isBlocked ? 'fa-solid fa-user-lock' : 'fa-solid fa-user-check',
+            color: user.isBlocked ? '#db1200' : 'lightgreen',
+          }"
+          :meta="user.roles.join(', ')"
+          @click="
+            navigate({ mode: 'push', to: { name: 'AdminUserEdit', params: { id: user._id } } })
+          "
+        />
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -42,15 +48,18 @@ export default {
   data() {
     return {
       accounts: [],
+      isLoading: true,
     }
   },
   async created() {
     if (this.hasPermission('view:registered-admins')) {
       const allAccounts = await this.getUsers_store()
       this.accounts = allAccounts.data
+      this.isLoading = false
     } else {
       const userAccount = await this.getOneUser_store()
       this.accounts.push(userAccount.data)
+      this.isLoading = false
     }
   },
   methods: {

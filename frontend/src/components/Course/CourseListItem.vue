@@ -16,9 +16,6 @@ export default {
   props: {
     course: Object,
   },
-  mounted() {
-    console.log(this.course)
-  },
   computed: {
     courseInfo() {
       const { date, time, trainer } = this.course

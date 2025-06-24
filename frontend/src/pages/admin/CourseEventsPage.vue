@@ -1,15 +1,18 @@
 <template>
   <div class="courses__container">
-    <div class="courses__title-container">
-      <h1 class="courses__title">{{ listLabel }}</h1>
-      <base-button v-if="hasPermission('add:course')" @click="goToAddCoursePage"
-        >Neuer Kurs</base-button
-      >
-    </div>
+    <BaseLoader v-if="isLoading" />
+    <div v-else>
+      <div class="courses__title-container">
+        <h1 class="courses__title">{{ listLabel }}</h1>
+        <base-button v-if="hasPermission('add:course')" @click="goToAddCoursePage"
+          >Neuer Kurs</base-button
+        >
+      </div>
 
-    <ul class="courses__list">
-      <CourseListItem v-for="course in courses" :key="course._id" :course="course" />
-    </ul>
+      <ul class="courses__list">
+        <CourseListItem v-for="course in courses" :key="course._id" :course="course" />
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -33,15 +36,18 @@ export default {
   data() {
     return {
       courses: [],
+      isLoading: true,
     }
   },
   async created() {
     if (this.hasPermission('view:registered-courses')) {
       const events = await this.getCourses_store()
       this.courses = events.data
+      this.isLoading = false
     } else {
       const events = await this.getUserCourses_store()
       this.courses = events.data
+      this.isLoading = false
     }
   },
   methods: {

@@ -81,7 +81,7 @@ export default {
           pos: 'Trainer',
           desc: 'Von der Matte zum Mikrofon - seit über 10 Jahren am Puls, seit 5 Jahren als Trainer mit vollem Einsatz! Auf in die nächste Runde für starke Muskeln und pure Ausdauer.',
           img: maikImg,
-          courses: 'Body Pump | HIIT | Core',
+          courses: 'Body Pump | HIIT | Core | Strength meets HIIT',
         },
       ],
     }

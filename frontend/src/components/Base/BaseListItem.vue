@@ -51,7 +51,9 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: nowrap;
   font-size: 1.2rem;
+  gap: 1rem;
 }
 
 .list-item:hover {
@@ -59,9 +61,10 @@ export default {
   cursor: pointer;
 }
 
-.list-texts {
+.list-item__texts {
   display: flex;
   flex-direction: column;
+  flex: 1 1 70%;
 }
 
 .list-item__name {
@@ -78,6 +81,8 @@ export default {
 .list-item__status {
   font-size: 1.3rem;
   font-weight: 500;
+  flex: 1 1 1;
+  text-align: right;
 }
 
 @media (min-width: 576px) {

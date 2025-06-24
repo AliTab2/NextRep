@@ -26,7 +26,6 @@ export default {
     AboutSection,
     ContactSection,
     EndSection,
-    // SectionView
   },
   data() {
     return {

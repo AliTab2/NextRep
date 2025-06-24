@@ -43,20 +43,12 @@ router.get('/:userId', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { action, message, userId } = req.body 
+    const { action, message, userId } = req.body
 
     if (!message || !userId) return res.status(400).json({})
 
     if (action === 'login') {
-      const lastLogin = await History.findOneAndUpdate(
-        { userId, action: 'login' },
-        { message }, 
-        { sort: { createdAt: -1 }, new: true }
-      )
-
-      if (!lastLogin) await History.create({ action, message, userId })
-
-      return res.status(200).json({})
+      await History.findOneAndDelete({ userId, action: 'login' }, { sort: { createdAt: -1 } })
     }
     await History.create({ action, message, userId })
     return res.status(201).json({})
@@ -65,6 +57,5 @@ router.post('/', async (req, res) => {
     return res.status(500).json({})
   }
 })
-
 
 export default router

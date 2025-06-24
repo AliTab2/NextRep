@@ -1,21 +1,25 @@
 <template>
   <div class="history__container">
-    <div class="history__title-container">
-      <h1 class="history__title">{{ historyLabel }} ({{ history.length }})</h1>
-    </div>
+    <BaseLoader v-if="isLoading" />
 
-    <div v-if="history.length">
-      <transition-group name="fade-slide" tag="ul" class="history__list" appear>
-        <BaseListItem
-          v-for="entry in history"
-          :key="entry._id"
-          :label="entry.userName"
-          :status="{ color: '#666', text: entry.message }"
-          :meta="`${new Date(entry.createdAt).toLocaleDateString('de-DE')} - ${new Date(entry.createdAt).getHours()}:${new Date(entry.createdAt).getMinutes()}`"
-        />
-      </transition-group>
+    <div v-else>
+      <div class="history__title-container">
+        <h1 class="history__title">{{ historyLabel }} ({{ history.length }})</h1>
+      </div>
+
+      <div v-if="history.length">
+        <transition-group name="fade-slide" tag="ul" class="history__list" appear>
+          <BaseListItem
+            v-for="entry in history"
+            :key="entry._id"
+            :label="entry.userName"
+            :status="{ color: '#666', text: entry.message }"
+            :meta="`${new Date(entry.createdAt).toLocaleDateString('de-DE')} - ${new Date(entry.createdAt).getHours()}:${new Date(entry.createdAt).getMinutes()}`"
+          />
+        </transition-group>
+      </div>
+      <p v-else class="history__empty-text">Keine Verlaufseinträge gefunden.</p>
     </div>
-    <p v-else class="history__empty-text">Keine Verlaufseinträge gefunden.</p>
   </div>
 </template>
 
@@ -27,6 +31,7 @@ export default {
   data() {
     return {
       history: [],
+      isLoading: true,
     }
   },
   setup() {
@@ -37,10 +42,10 @@ export default {
   async created() {
     const historyStore = useHistoryStore()
 
-    // for selected user
     if (this.userId && this.userName) {
       const result = await historyStore.fetchUserHistory(this.userId)
       this.history = result.data
+      this.isLoading = false
       return
     }
 
@@ -48,6 +53,7 @@ export default {
     if (!this.hasPermission('view:all-history')) {
       const result = await historyStore.fetchUserHistory()
       this.history = result.data
+      this.isLoading = false
       return
     }
 
@@ -55,6 +61,7 @@ export default {
     if (this.hasPermission('view:all-history')) {
       const result = await historyStore.fetchAllHistory()
       this.history = result.data
+      this.isLoading = false
       return
     }
   },
