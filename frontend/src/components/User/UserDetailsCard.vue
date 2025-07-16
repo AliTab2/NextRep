@@ -45,7 +45,6 @@
 <script>
 import useUserStore from '@/stores/userStore'
 import { mapActions } from 'pinia'
-import { generateAdminLogObj } from '@/utils/logging'
 import { usePermission } from '@/composables/usePermission.js'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 export default {
@@ -66,26 +65,13 @@ export default {
     return { hasPermission, navigate }
   },
   methods: {
-    ...mapActions(useUserStore, ['deleteUser_store']),
+    ...mapActions(useUserStore, ['deleteUser']),
     switchToForm() {
       this.$emit('switch-to-form')
     },
-    showUserHistory() {
-      this.navigate({
-        mode: 'push',
-        to: {
-          name: 'AdminHistory',
-          query: { userId: this.user.id || this.user._id, userName: this.user.name },
-        },
-      })
-    },
     async deleteUserAccount() {
       try {
-        const logObj = generateAdminLogObj('delete', {
-          target_role: this.getUserMainRole,
-          target_name: this.user.name,
-        })
-        const res = await this.deleteUser_store(this.user._id, logObj)
+        const res = await this.deleteUser(this.user._id)
         if (res.error) {
           this.$emit('error', res.message)
         } else {
