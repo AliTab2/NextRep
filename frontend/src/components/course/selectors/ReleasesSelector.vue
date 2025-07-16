@@ -10,7 +10,7 @@ export default {
   mixins: [FormFieldMixin],
   data() {
     return {
-      releases: generateRange(120, 140),
+      releases: generateRange(70, 160),
     }
   },
 }

@@ -40,7 +40,7 @@ function generateWhatsAppMessage({ trainerName, changes = [], variant = 1 }) {
 
   const variants = {
     1: `
-📢*${trainerName}* hat den Kursplan aktualisiert!
+📢 *${trainerName}* hat den Kursplan aktualisiert!
 
 Was genau hat *${trainerName}* verändert?
 
