@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <NavBar />
+    <TheNavbar />
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <component :is="Component" />
@@ -10,14 +10,14 @@
 </template>
 
 <script>
-import NavBar from '@/components/Nav/NavBar.vue'
+import TheNavbar from '@/components/nav/main/TheNavbar.vue'
 import useUserStore from '@/stores/userStore.js'
 import { mapActions, mapState } from 'pinia'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 
 export default {
   components: {
-    NavBar,
+    TheNavbar,
   },
   setup() {
     const { navigate } = useSmartNavigation()

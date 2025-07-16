@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia'
-import { createUser, deleteUser, getOneUser, getUsers, login, updateUser } from '@/api/userApi.js'
+import {
+  createUser,
+  deleteUser,
+  getOneUser,
+  getAllUsers,
+  login,
+  updateUser,
+} from '@/api/userApi.js'
 import { handleApiResponse, buildErrorResponse } from '@/api/on'
-import { renderLogMessage, logTemplates } from '@/utils/logging'
 import { useHistoryStore } from './historyStore'
 import { generateAdminLogObj } from '@/utils/logging'
 
@@ -22,7 +28,7 @@ const useUserStore = defineStore('user', {
     mainRole: (state) => state.user.roles.filter((r) => r !== 'trainer')[0],
   },
   actions: {
-    async login_store(accessCode) {
+    async login(accessCode) {
       try {
         const res = await login(accessCode)
         const result = await handleApiResponse(res, 'Login fehlgeschlagen')
@@ -32,11 +38,8 @@ const useUserStore = defineStore('user', {
 
           localStorage.setItem('user', JSON.stringify(this.user))
 
-          const logObj = generateAdminLogObj('login', {
-            target_role: this.mainRole,
-            target_name: this.user.name,
-          })
-          this.logUserAction(logObj.actionKey, logObj)
+          const logObj = generateAdminLogObj('login')
+          this.logUserAction(logObj)
         }
 
         return result
@@ -50,16 +53,11 @@ const useUserStore = defineStore('user', {
       const parsedUser = JSON.parse(user)
 
       if (user) {
-        const res = await this.login_store(parsedUser.password)
-        if (res.error) this.logout_store()
+        const res = await this.login(parsedUser.password)
+        if (res.error) this.logout()
       }
     },
-    logout_store() {
-      // const logObj = generateAdminLogObj('logout', {
-      //   target_role: this.mainRole,
-      //   target_name: this.user.name,
-      // })
-      // this.logUserAction(logObj.actionKey, logObj)
+    logout() {
       this.user = {
         id: null,
         name: '',
@@ -72,7 +70,7 @@ const useUserStore = defineStore('user', {
       this.isLoggedIn = false
       localStorage.removeItem('user')
     },
-    async createUser_store(user, logObj) {
+    async createUser(user, logObj) {
       try {
         const res = await createUser(user, this.user.id)
         const result = await handleApiResponse(res, 'Nutzer Erstellen fehlgeschlagen')
@@ -88,7 +86,7 @@ const useUserStore = defineStore('user', {
       }
     },
 
-    async updateUser_store(updatedUser, logObj) {
+    async updateUser(updatedUser, logObj) {
       try {
         const res = await updateUser(updatedUser._id, updatedUser, this.user.id)
         const result = await handleApiResponse(res, 'Nutzer Aktualisieren fehlgeschlagen')
@@ -102,7 +100,7 @@ const useUserStore = defineStore('user', {
       }
     },
 
-    async deleteUser_store(userId, logObj) {
+    async deleteUser(userId, logObj) {
       try {
         const res = await deleteUser(userId, this.user.id)
         const result = await handleApiResponse(res, 'Nuter Löschen fehlgeschlagen')
@@ -115,9 +113,9 @@ const useUserStore = defineStore('user', {
         return buildErrorResponse()
       }
     },
-    async getUsers_store() {
+    async getAllUsers() {
       try {
-        const res = await getUsers(this.user.id)
+        const res = await getAllUsers(this.user.id)
         const result = await handleApiResponse(res, 'Nutzer Laden werden')
         if (!result.error) {
           this.users = result.data
@@ -128,7 +126,7 @@ const useUserStore = defineStore('user', {
         return buildErrorResponse()
       }
     },
-    async getOneUser_store() {
+    async getOneUser() {
       try {
         const res = await getOneUser(this.user.id)
         const result = await handleApiResponse(res, 'Nutzer Laden werden')
@@ -141,27 +139,17 @@ const useUserStore = defineStore('user', {
         return buildErrorResponse()
       }
     },
-    async logUserAction(actionKey, values) {
+    async logUserAction(logObj) {
       try {
-        const template = logTemplates.admin[actionKey]
-
-        if (!template) {
-          console.error(`[Log] Kein Template für: ${actionKey}`)
-          return
-        }
-
-        const message = renderLogMessage(template, values)
         const historyStore = useHistoryStore()
         const result = await historyStore.createHistoryEntry({
-          action: actionKey,
-          message,
+          action: logObj.action_key,
+          course: null,
           userId: this.user.id,
         })
-
         if (result.error) {
           console.warn('Fehler beim Speichern in History:', result.message)
         }
-
         return result
       } catch (err) {
         console.error('Fehler in logUserAction(): ', err)

@@ -16,10 +16,6 @@
         <span class="value">{{ user.password || 'Wird automatisch erzeugt' }}</span>
       </div>
       <div class="info-row" v-if="isEditing">
-        <span class="label">Verlauf:</span>
-        <span class="value history-link" @click="showUserHistory">Verlaufstabelle anzeigen</span>
-      </div>
-      <div class="info-row" v-if="isEditing">
         <span class="label">Status:</span>
         <span class="value">{{ user.isBlocked ? 'Blockiert' : 'Frei geschaltet' }}</span>
       </div>

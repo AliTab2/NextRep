@@ -1,16 +1,16 @@
 import User from '../models/User.js'
-import { sendCourseMessage } from '../utils/send.js'
-import express from 'express'
 import Course from '../models/Course.js'
+import express from 'express'
+import { sendCourseMessage } from '../utils/send.js'
 import { validateCourse } from '../utils/validate.js'
-import { checkRole, checkCooldown } from '../middleware/check.js'
+import { checkRole } from '../middleware/check.js'
 
 const router = express.Router()
 
 // GET All COURSES
 router.get('/', async (req, res) => {
   try {
-    const courses = await Course.find().populate('trainer', 'name')
+    const courses = await Course.find().populate('trainer', 'name').populate('dateInfo.exceptions.trainer', 'name')
     return res.json(courses)
   } catch (err) {
     console.error('Fehler beim Abrufen:', err)
@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 // GET USER COURSES
 router.get('/user', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id']
+    const userId = req.headers['x-user-id'] 
     const user = await User.findById(userId)
     if (!user) return res.status(404).json({}) 
 
@@ -35,7 +35,7 @@ router.get('/user', async (req, res) => {
 })
 
 // ADD-COURSE
-router.post('/', checkRole(['superadmin', 'admin']), checkCooldown, async (req, res) => {
+router.post('/', checkRole(['superadmin', 'admin']), async (req, res) => {
   const course = req.body.course
   const msg = req.body.msg
   const userId = req.headers['x-user-id']
@@ -53,7 +53,7 @@ router.post('/', checkRole(['superadmin', 'admin']), checkCooldown, async (req, 
     // WhatsApp Auto-Msg
     const user = await User.findById(userId)
     if (!user) return res.status(401).json({})
-    if (msg) await sendCourseMessage(user.name, msg)
+    // if (msg) await sendCourseMessage(user.name, msg)
 
     return res.status(201).json({})
   } catch (err) {
@@ -79,7 +79,7 @@ router.put('/:courseId', checkRole(['superadmin', 'admin']), async (req, res) =>
     // WhatsApp Auto-Msg
     const user = await User.findById(userId)
     if (!user) return res.status(401).json({})
-    if (msg) await sendCourseMessage(user.name, msg)
+    // if (msg) await sendCourseMessage(user.name, msg)
   
       return res.json(course)
   } catch (err) {
@@ -89,7 +89,7 @@ router.put('/:courseId', checkRole(['superadmin', 'admin']), async (req, res) =>
 })
 
 // DELETE-COURSE
-router.delete('/:courseId', checkRole(['superadmin', 'admin']), checkCooldown, async (req, res) => {
+router.delete('/:courseId', checkRole(['superadmin', 'admin']), async (req, res) => {
   const msg = req.query.msg
   const userId = req.headers['x-user-id']
   
@@ -97,11 +97,10 @@ router.delete('/:courseId', checkRole(['superadmin', 'admin']), checkCooldown, a
     const deleted = await Course.findByIdAndDelete(req.params.courseId)
     if (!deleted) return res.status(404).json({})
 
-
     // WhatsApp Auto-Msg
     const user = await User.findById(userId)
     if (!user) return res.status(401).json({})
-    if (msg) await sendCourseMessage(user.name, msg)
+    // if (msg) await sendCourseMessage(user.name, msg)
 
     return res.json({})
   } catch (err) {

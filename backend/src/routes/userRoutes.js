@@ -1,6 +1,6 @@
 import express from 'express'
 import User from '../models/User.js'
-import { checkRole, checkCooldown } from '../middleware/check.js'
+import { checkRole } from '../middleware/check.js'
 import { validateUser } from '../utils/validate.js'
 
 const router = express.Router()
@@ -16,11 +16,11 @@ router.get('/', checkRole(['superadmin', 'admin']), async (req, res) => {
   }
 }) 
 
-// GET ONE USERS
+// GET ONE USER
 router.get('/user', checkRole(['superadmin', 'admin']), async (req, res) => {
   try {
-    const userId = req.headers['x-user-id']
-    const user = await User.findById(userId)
+    const targetUserId = req.headers['x-target-user-id']
+    const user = await User.findById(targetUserId)
     if (!user) return res.status(404).json({})
     return res.json(user)
   } catch (err) {
@@ -29,8 +29,8 @@ router.get('/user', checkRole(['superadmin', 'admin']), async (req, res) => {
   }
 }) 
 
-// ADD USER
-router.post('/', checkRole(['superadmin']), checkCooldown, async (req, res) => {
+// CREATE USER
+router.post('/create', checkRole(['superadmin']), async (req, res) => {
   const user = req.body
   if (!validateUser(user)) return res.status(400).json({})
   try {
@@ -39,7 +39,7 @@ router.post('/', checkRole(['superadmin']), checkCooldown, async (req, res) => {
     })
     if (nameExists) return res.status(409).json({ message: 'Name bereits vergeben' })
     const newUser = new User(user)
-    const saved = await newUser.save()
+    await newUser.save()
     return res.json({}) 
   } catch (err) {
     console.error('Fehler beim Speichern:', err)
@@ -48,8 +48,9 @@ router.post('/', checkRole(['superadmin']), checkCooldown, async (req, res) => {
 })
 
 // UPDATE USER
-router.put('/:id', checkRole(['superadmin']), checkCooldown, async (req, res) => {
+router.put('/update', checkRole(['superadmin']), async (req, res) => {
   const updated = req.body
+  const targetUserId = req.headers['x-target-user-id']
 
   if (!validateUser(updated)) {
     return res.status(400).json({})
@@ -57,11 +58,11 @@ router.put('/:id', checkRole(['superadmin']), checkCooldown, async (req, res) =>
 
   try {
     const nameConflict = await User.findOne({
-      _id: { $ne: req.params.id }, 
+      _id: { $ne: targetUserId }, 
       name: { $regex: new RegExp(`^${updated.name}$`, 'i') } 
     })
     if (nameConflict) return res.status(409).json({ message: 'Name bereits vergeben' })
-    const user = await User.findByIdAndUpdate(req.params.id, updated, { new: true })
+    const user = await User.findByIdAndUpdate(targetUserId, updated, { new: true })
     if (!user) return res.status(404).json({})
     return res.json(user)
   } catch (err) {
@@ -71,9 +72,10 @@ router.put('/:id', checkRole(['superadmin']), checkCooldown, async (req, res) =>
 })
 
 // DELETE USER
-router.delete('/:id', checkRole(['superadmin']), checkCooldown, async (req, res) => {
+router.delete('/delete', checkRole(['superadmin']), async (req, res) => {
   try {
-    const deleted = await User.findByIdAndDelete(req.params.id)
+    const targetUserId = req.headers['x-target-user-id']
+    const deleted = await User.findByIdAndDelete(targetUserId)
     if (!deleted) return res.status(404).json({})
     return res.json({})
   } catch (err) {

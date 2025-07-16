@@ -46,7 +46,7 @@ const router = createRouter({
           component: () => import('@/pages/admin/CourseManagementPage.vue'),
         },
         {
-          path: 'courses/edit/:id',
+          path: 'courses/edit/:courseId',
           name: 'AdminCourseEdit',
           component: () => import('@/pages/admin/CourseManagementPage.vue'),
         },
@@ -57,7 +57,7 @@ const router = createRouter({
           component: () => import('@/pages/admin/UserManagementPage.vue'),
         },
         {
-          path: 'users/edit/:id',
+          path: 'users/edit/:userId',
           name: 'AdminUserEdit',
           meta: { allowedRoles: ['superadmin'] },
           component: () => import('@/pages/admin/UserManagementPage.vue'),
@@ -86,6 +86,12 @@ const router = createRouter({
           meta: { allowedRoles: ['superadmin', 'admin'] },
           component: () => import('@/pages/admin/AccountsPage.vue'),
         },
+        {
+          path: 'comin-soon',
+          name: 'ComingSoon',
+          meta: { allowedRoles: ['superadmin', 'admin'] },
+          component: () => import('@/pages/admin/ComingSoonPage.vue'),
+        },
       ],
     },
   ],
@@ -106,7 +112,7 @@ router.beforeEach((to, from, next) => {
 
   // blocked users first
   if (user.isBlocked && to.name !== 'Auth') {
-    userStore.logout_store()
+    userStore.logout()
     return next({ name: 'Auth', query: { reason: 'blocked' } })
   }
 

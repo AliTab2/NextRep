@@ -1,15 +1,16 @@
 import { defineStore } from 'pinia'
 import useUserStore from './userStore'
-import { renderLogMessage, logTemplates } from '@/utils/logging'
+import { handleApiResponse, buildErrorResponse } from '@/api/on'
+import { useHistoryStore } from './historyStore'
+
+// import { renderLogMessage, logTemplates } from '@/utils/logging'
 import {
-  getCourses,
+  getAllCourses,
   getUserCourses,
   createCourse,
   updateCourse,
   deleteCourse,
 } from '@/api/courseApi.js'
-import { handleApiResponse, buildErrorResponse } from '@/api/on'
-import { useHistoryStore } from './historyStore'
 
 const useCourseStore = defineStore('courses', {
   state: () => {
@@ -20,31 +21,24 @@ const useCourseStore = defineStore('courses', {
         end: 0,
       },
       isExporting: false,
+      exportNote: null,
+      statusMessage: null,
+      statusType: null,
+      isLoading: true,
+      calendarView: 'full',
     }
   },
   getters: {
     userId: () => useUserStore().user.id,
   },
   actions: {
-    async addCourse_store(course, logObj) {
+    async addCourse(course, logObj) {
       try {
-        // WhatsApp message
-        let autoMsg = null
-        if (logObj) {
-          const temp = logTemplates.course[logObj.actionKey]
-          logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })
-          autoMsg = renderLogMessage(temp, logObj)
-        }
-
-        const res = await createCourse(course, this.userId, autoMsg)
+        const res = await createCourse(course, this.userId)
         const result = await handleApiResponse(res, 'Kurs Hinzufügen fehlgeschlagen')
 
         if (!result.error && logObj) {
-          this.logCourseAction(logObj.actionKey, logObj)
+          this.logCourseAction(logObj)
         }
 
         return result
@@ -54,25 +48,13 @@ const useCourseStore = defineStore('courses', {
       }
     },
 
-    async updateCourse_store(updatedCourse, logObj) {
+    async updateCourse(course, logObj) {
       try {
-        // WhatsApp message
-        let autoMsg = null
-        if (logObj) {
-          const temp = logTemplates.course[logObj.actionKey]
-          logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })
-          autoMsg = renderLogMessage(temp, logObj)
-        }
-
-        const res = await updateCourse(updatedCourse._id, updatedCourse, this.userId, autoMsg)
+        const res = await updateCourse(course._id, course, this.userId)
         const result = await handleApiResponse(res, 'Kurs Aktualisieren fehlgeschlagen')
 
         if (!result.error && logObj) {
-          this.logCourseAction(logObj.actionKey, logObj)
+          this.logCourseAction(logObj)
         }
 
         return result
@@ -82,25 +64,13 @@ const useCourseStore = defineStore('courses', {
       }
     },
 
-    async deleteCourse_store(courseId, logObj) {
+    async deleteCourse(courseId, logObj) {
       try {
-        // WhatsApp message
-        let autoMsg = null
-        if (logObj) {
-          const temp = logTemplates.course[logObj.actionKey]
-          logObj.target_date = new Date(logObj.target_date).toLocaleDateString('de-DE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })
-          autoMsg = renderLogMessage(temp, logObj)
-        }
-
-        const res = await deleteCourse(courseId, this.userId, autoMsg)
+        const res = await deleteCourse(courseId, this.userId)
         const result = await handleApiResponse(res, 'Kurs Löschen fehlgeschlagen')
 
         if (!result.error && logObj) {
-          this.logCourseAction(logObj.actionKey, logObj)
+          this.logCourseAction(logObj)
         }
 
         return result
@@ -109,9 +79,9 @@ const useCourseStore = defineStore('courses', {
         return buildErrorResponse()
       }
     },
-    async getCourses_store() {
+    async getAllCourses() {
       try {
-        const res = await getCourses()
+        const res = await getAllCourses()
         const result = await handleApiResponse(res, 'Kurse Laden fehlgeschlagen')
         if (!result.error) {
           this.courses = result.data
@@ -122,7 +92,7 @@ const useCourseStore = defineStore('courses', {
         return buildErrorResponse()
       }
     },
-    async getUserCourses_store() {
+    async getUserCourses() {
       try {
         const res = await getUserCourses(this.userId)
         const result = await handleApiResponse(res, 'Kurse Laden fehlgeschlagen')
@@ -139,29 +109,17 @@ const useCourseStore = defineStore('courses', {
       this.weekRange.start = startDate
       this.weekRange.end = endDate
     },
-    async logCourseAction(actionKey, values) {
-      console.log(values)
+    async logCourseAction(logObj) {
       try {
-        const template = logTemplates.course[actionKey]
-
-        if (!template) {
-          console.error(`[Log] Kein Template für: ${actionKey}`)
-          return
-        }
-
-        const message = renderLogMessage(template, values)
-
         const historyStore = useHistoryStore()
         const result = await historyStore.createHistoryEntry({
-          action: actionKey,
-          message,
+          action: logObj.action_key,
+          course: logObj.target_course,
           userId: this.userId,
         })
-
         if (result.error) {
           console.warn('Fehler beim Speichern in History:', result.message)
         }
-
         return result
       } catch (err) {
         console.error('Fehler in logCourseAction(): ', err)

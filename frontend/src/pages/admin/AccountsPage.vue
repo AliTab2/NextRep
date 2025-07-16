@@ -1,78 +1,63 @@
 <template>
-  <div class="users__container">
-    <BaseLoader v-if="isLoading" />
-
-    <div v-else>
-      <div class="users__title-container">
-        <h1 class="users__title">{{ listLabel }}</h1>
-        <base-button v-if="hasPermission('create:admin')" @click="goToAddUserPage"
-          >Neues Konto</base-button
-        >
-      </div>
-
-      <ul class="users__list">
-        <BaseListItem
-          v-for="user in accounts"
-          :key="user._id"
-          :label="user.name"
-          :status="{
-            icon: user.isBlocked ? 'fa-solid fa-user-lock' : 'fa-solid fa-user-check',
-            color: user.isBlocked ? '#db1200' : 'lightgreen',
-          }"
-          :meta="user.roles.join(', ')"
-          @click="
-            navigate({ mode: 'push', to: { name: 'AdminUserEdit', params: { id: user._id } } })
-          "
-        />
-      </ul>
-    </div>
-  </div>
+  <PageContainer :is-loading="isLoading">
+    <template #header>
+      <AccountPageHeader />
+    </template>
+    <template #main>
+      <DataSection :not-found="notFound" not-found-item="Konten">
+        <template #list-item>
+          <AccountListItem v-for="user in users" :key="user._id" :user="user" />
+        </template>
+      </DataSection>
+    </template>
+  </PageContainer>
 </template>
 
 <script>
 import { usePermission } from '@/composables/usePermission.js'
-import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 import useUserStore from '@/stores/userStore'
-import { mapActions } from 'pinia'
+import { mapActions, mapState } from 'pinia'
+import PageContainer from '@/components/dashboard/ui/PageContainer.vue'
+import AccountPageHeader from '@/components/dashboard/account/AccountPageHeader.vue'
+import DataSection from '@/components/dashboard/ui/DataSection.vue'
+import AccountListItem from '@/components/dashboard/account/AccountListItem.vue'
 
 export default {
+  components: {
+    PageContainer,
+    AccountPageHeader,
+    DataSection,
+    AccountListItem,
+  },
   setup() {
     const { hasPermission } = usePermission()
-    const { navigate } = useSmartNavigation()
-
-    return {
-      hasPermission,
-      navigate,
-    }
+    return { hasPermission }
   },
   data() {
     return {
-      accounts: [],
       isLoading: true,
+      error: false,
     }
   },
   async created() {
     if (this.hasPermission('view:registered-admins')) {
-      const allAccounts = await this.getUsers_store()
-      this.accounts = allAccounts.data
-      this.isLoading = false
+      this.error = (await this.getAllUsers()).error
     } else {
-      const userAccount = await this.getOneUser_store()
-      this.accounts.push(userAccount.data)
-      this.isLoading = false
+      this.error = (await this.getOneUser()).error
     }
+
+    this.isLoading = false
   },
   methods: {
-    ...mapActions(useUserStore, ['getOneUser_store', 'getUsers_store']),
+    ...mapActions(useUserStore, ['getOneUser', 'getAllUsers']),
     goToAddUserPage() {
-      this.$router.push({ name: 'AdminUserAdd' })
+      this.navigate({ mode: 'push', to: { name: 'AdminUserAdd' } })
     },
   },
   computed: {
-    listLabel() {
-      if (this.accounts.length === 0) return 'Keine Konten gefunden!'
-      if (this.hasPermission('view:registered-admins')) return `Konten (${this.accounts.length})`
-      return 'Mein Konto'
+    ...mapState(useUserStore, ['users']),
+    notFound() {
+      return Boolean(this.users.length) === false || this.error
     },
   },
 }

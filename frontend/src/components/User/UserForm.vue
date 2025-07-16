@@ -2,7 +2,7 @@
   <base-form :title="formLabel">
     <BaseInput label="Name" placeholder="Bitte Name eingeben" v-model="name" :inValid="isInvalid" />
     <BaseCheckbox v-model="selectedRoles" :option="option" />
-    <BaseCheckboxGroup
+    <CheckboxGroup
       label="Kurse"
       placeholder-label="Bitte Kurse wählen"
       :options="courses"
@@ -23,7 +23,6 @@
     </div>
 
     <div class="btn-container">
-      <base-button class="btn-container__save" @click="handleSave">{{ buttonLabel }}</base-button>
       <base-button
         v-if="showCancelButton"
         class="btn-container__back"
@@ -31,6 +30,9 @@
         variant="delete"
         >Abbrechen</base-button
       >
+      <base-button variant="dark" class="btn-container__save" @click="handleSave">{{
+        buttonLabel
+      }}</base-button>
     </div>
   </base-form>
 </template>
@@ -38,14 +40,18 @@
 <script>
 import { coursesList } from '@/utils/base.js'
 import { generateAdminPassword } from '@/utils/user.js'
-import { checkUser } from '@/utils/validate.js'
+import { validateUser } from '@/utils/validate.js'
 import { mapState, mapActions } from 'pinia'
 import useUserStore from '@/stores/userStore.js'
 import { userFormat, userStateList } from '@/utils/base.js'
 import { generateAdminLogObj } from '@/utils/logging'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
+import CheckboxGroup from '../shared/CheckboxGroup.vue'
 
 export default {
+  components: {
+    CheckboxGroup,
+  },
   props: {
     isEditing: {
       type: Boolean,
@@ -99,7 +105,7 @@ export default {
       this.user.courses = [...this.selectedCourses]
       this.user.roles = [...this.selectedRoles]
 
-      const { invalid } = checkUser(this.user)
+      const { invalid } = validateUser(this.user)
       if (invalid) {
         this.isInvalid = true
         return
@@ -125,7 +131,7 @@ export default {
       }
     },
     async update() {
-      const { invalid } = checkUser(this.user)
+      const { invalid } = validateUser(this.user)
       if (invalid) {
         this.isInvalid = true
       } else {

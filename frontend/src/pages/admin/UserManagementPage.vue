@@ -3,7 +3,7 @@
     <BaseMessage v-if="statusMessage" :status="statusType" :key="Date.now()">
       {{ statusMessage }}
     </BaseMessage>
-    <BaseSplitView
+    <PageSplitView
       v-if="hasPermission('edit:admin')"
       :is-editing="isEditing"
       left-width="70%"
@@ -31,7 +31,7 @@
           @error="handleError"
         />
       </template>
-    </BaseSplitView>
+    </PageSplitView>
     <div v-else>
       <UserDetailsCard :user="userAccount" :is-editing="isEditing" />
     </div>
@@ -39,18 +39,20 @@
 </template>
 
 <script>
-import UserDetailsCard from '@/components/User/UserDetailsCard.vue'
-import UserForm from '@/components/User/UserForm.vue'
+import UserDetailsCard from '@/components/user/UserDetailsCard.vue'
+import UserForm from '@/components/user/UserForm.vue'
 import { usePermission } from '@/composables/usePermission.js'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 import { mapState, mapActions } from 'pinia'
 import useUserStore from '@/stores/userStore.js'
 import { userFormat } from '@/utils/base.js'
+import PageSplitView from '@/components/shared/PageSplitView.vue'
 
 export default {
   components: {
     UserDetailsCard,
     UserForm,
+    PageSplitView,
   },
   setup() {
     const { hasPermission } = usePermission()
@@ -68,7 +70,7 @@ export default {
     }
   },
   async created() {
-    const userId = this.$route.params.id
+    const userId = this.$route.params.userId
     if (userId) {
       this.isEditing = true
 

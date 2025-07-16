@@ -1,31 +1,31 @@
 <template>
   <div>
-    <HeroSection />
-    <CoursesSection />
-    <BioSection />
-    <AboutSection />
-    <ContactSection />
-    <EndSection />
+    <HeroBanner />
+    <FeaturedCourses />
+    <TrainerBio />
+    <AboutBlock />
+    <JoinUs />
+    <PageFooter />
   </div>
 </template>
 
 <script>
 import { coursesList, coursesWidgetsList } from '@/utils/base.js'
-import HeroSection from '@/components/Homepage/HeroSection.vue'
-import CoursesSection from '@/components/Homepage/CoursesSection.vue'
-import BioSection from '@/components/Homepage/BioSection.vue'
-import AboutSection from '@/components/Homepage/AboutSection.vue'
-import ContactSection from '@/components/Homepage/ContactSection.vue'
-import EndSection from '@/components/Homepage/EndSection.vue'
+import HeroBanner from '@/components/homepage/HeroBanner.vue'
+import FeaturedCourses from '@/components/homepage/FeaturedCourses.vue'
+import TrainerBio from '@/components/homepage/TrainerBio.vue'
+import AboutBlock from '@/components/homepage/AboutBlock.vue'
+import JoinUs from '@/components/homepage/JoinUs.vue'
+import PageFooter from '@/components/homepage/PageFooter.vue'
 
 export default {
   components: {
-    HeroSection,
-    CoursesSection,
-    BioSection,
-    AboutSection,
-    ContactSection,
-    EndSection,
+    HeroBanner,
+    FeaturedCourses,
+    TrainerBio,
+    AboutBlock,
+    JoinUs,
+    PageFooter,
   },
   data() {
     return {

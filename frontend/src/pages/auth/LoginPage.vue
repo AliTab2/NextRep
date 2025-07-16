@@ -87,7 +87,7 @@ watch(code, async () => {
   if (fullCode.length !== 6) return
 
   isLoading.value = true
-  const res = await userStore.login_store(fullCode)
+  const res = await userStore.login(fullCode)
   isLoading.value = false
 
   if (res?.error) {

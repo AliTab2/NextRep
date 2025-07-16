@@ -3,156 +3,81 @@
     <BaseMessage v-if="statusMessage" :status="statusType" :key="Date.now()">
       {{ statusMessage }}
     </BaseMessage>
-    <BaseSplitView
-      :is-editing="isEditing"
-      left-width="100%"
-      right-width="60%"
-      ref="splitRef"
-      v-if="hasPermission('edit:course')"
-    >
-      <template #right>
-        <CalendarEventCard
-          :sport="course.sport"
-          :trainer="course.trainer.name"
-          :hour="course.time.hour"
-          :minutes="course.time.minutes"
-          :duration="course.time.duration"
-          :status="course.status"
-          :weekDayName="course.date.weekDayName"
-          :recurring="course.date.recurring"
-          mode="preview"
-          @switch-to-form="handleCardSwitch"
-          @delete-course="handleDeleteCourse"
-          :is-loading="isLoading"
-        />
-      </template>
 
-      <template #left>
-        <CourseFormEdit
-          v-if="isEditing"
-          :courseObj="course"
-          @update-course="updateCourse"
-          @invalid-input="handleInvalid"
-          @error="handleError"
-          @success="handleSuccess"
-          :should-delete-course="shouldDeleteCourse"
-          :delete-options="deleteOptions"
-          @course-deleted="handleCourseDeleted"
-        />
-        <CourseFormAdd
-          v-else
-          :courseObj="course"
-          @update-course="updateCourse"
-          @invalid-input="handleInvalid"
-          @error="handleError"
-          @success="handleSuccess"
-        />
-      </template>
-    </BaseSplitView>
-    <div class="course-preview" v-else>
-      <CalendarEventCard
-        :sport="course.sport"
-        :trainer="course.trainer.name"
-        :hour="course.time.hour"
-        :minutes="course.time.minutes"
-        :duration="course.time.duration"
-        :status="course.status"
-        :weekDayName="course.date.weekDayName"
-        :recurring="course.date.recurring"
-        :weekRange="course.date.weekRange"
-        :weekDay="course.date.weekDay"
-        mode="preview"
-        @switch-to-form="handleCardSwitch"
-        @delete-course="handleDeleteCourse"
-        :is-loading="isLoading"
+    <transition name="fade-slide" mode="out-in">
+      <component
+        :is="currentComponent"
+        :key="viewMode"
+        :original-course="course"
+        :exception-today="exceptionToday"
+        @edit="viewMode = 'edit'"
+        @success="handleSuccess"
+        @error="handleError"
       />
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
-import CalendarEventCard from '@/components/Calendar/CalendarEventCard.vue'
-import CourseFormAdd from '@/components/Course/CourseFormAdd.vue'
-import CourseFormEdit from '@/components/Course/CourseFormEdit.vue'
-
-import { mapState, mapActions } from 'pinia'
-import useCourseStore from '@/stores/courseStore.js'
-import { courseFormat } from '@/utils/base.js'
+import FormAdd from '@/components/course/form/FormAdd.vue'
+import FormEdit from '@/components/course/form/FormEdit.vue'
+import CourseInfoView from '@/components/course/CourseInfoView.vue'
 import { usePermission } from '@/composables/usePermission.js'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
+import useCourseStore from '@/stores/courseStore'
+import { mapState } from 'pinia'
 
 export default {
   components: {
-    CalendarEventCard,
-    CourseFormAdd,
-    CourseFormEdit,
+    FormAdd,
+    FormEdit,
+    CourseInfoView,
+  },
+  data() {
+    return {
+      viewMode: 'info', // 'info' | 'edit' | 'add'
+      statusMessage: '',
+      statusType: '',
+      course: null,
+      exceptionToday: null,
+    }
   },
   setup() {
     const { hasPermission } = usePermission()
     const { navigate } = useSmartNavigation()
     return { hasPermission, navigate }
   },
-  data() {
-    return {
-      screenIsLarge: window.innerWidth >= 1000,
-      course: null,
-      isEditing: false,
-      isInvalid: false,
-      isValid: false,
-      cardVisible: true,
-      formVisible: false,
-      statusMessage: '',
-      statusType: '',
-      isLoading: false,
-      shouldDeleteCourse: false,
-      deleteOptions: {},
-    }
-  },
   created() {
-    window.addEventListener('resize', this.checkScreenSize)
-    const courseId = this.$route.params.id
-    if (courseId) {
-      this.isEditing = true
-      const foundCourse = this.courses.find((c) => c._id === courseId)
-      if (foundCourse) {
-        this.course = JSON.parse(JSON.stringify(foundCourse))
-      } else {
-        this.navigate({ mode: 'push', to: { name: 'Calendar' } })
-      }
-    } else {
-      // Kein Bearbeiten, leeres Objekt
-      this.course = structuredClone(courseFormat)
+    const courseId = this.$route.params.courseId
+    if (!courseId) {
+      this.viewMode = 'add'
+      return
+    }
+
+    // this.viewMode = this.$route.name === 'AdminCourseEdit' ? 'edit' : 'info'
+    this.course = this.courses.find((c) => c._id.toString() === courseId.toString())
+
+    const exceptionDate = this.$route.query.exceptionDate
+    if (exceptionDate) {
+      this.exceptionToday = this.course?.dateInfo?.exceptions?.find((c) => {
+        return (
+          `${new Date(c.dateInfo.creationWeekRange.start).toDateString()}-${c.dateInfo.dayIndex}` ===
+          exceptionDate
+        )
+      })
     }
   },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.checkScreenSize)
-  },
-  mounted() {
-    this.course.date.weekRange.start = this.weekRange.start
-    this.course.date.weekRange.end = this.weekRange.end
+  computed: {
+    ...mapState(useCourseStore, ['courses']),
+    currentComponent() {
+      return {
+        info: CourseInfoView,
+        edit: FormEdit,
+        add: FormAdd,
+      }[this.viewMode]
+    },
   },
   methods: {
-    checkScreenSize() {
-      this.screenIsLarge = window.innerWidth >= 1000
-      if (this.screenIsLarge) this.cardVisible = true
-    },
-    handleDeleteCourse(options) {
-      this.shouldDeleteCourse = !this.shouldDeleteCourse
-      this.deleteOptions = { ...options }
-      this.isLoading = true
-    },
-    handleCourseDeleted() {
-      this.isLoading = false
-    },
-    updateCourse(updatedCourse) {
-      this.course = { ...updatedCourse }
-    },
-    handleCardSwitch() {
-      this.$refs.splitRef?.handleSwitch?.()
-    },
-    handleInvalid() {
-      this.isInvalid = true
-    },
     clearMessage() {
       this.statusMessage = ''
       this.statusType = ''
@@ -168,25 +93,6 @@ export default {
         to: { name: 'Calendar', query: { status: 'success', message: msg } },
       })
     },
-    ...mapActions(useCourseStore, ['addCourse']),
-  },
-  computed: {
-    ...mapState(useCourseStore, ['weekRange', 'courses']),
-    showForm() {
-      if (this.screenIsLarge) return true
-      if (!this.isEditing) return true
-      return this.formVisible
-    },
-    showCard() {
-      if (this.screenIsLarge) return this.cardVisible
-      return this.isEditing && !this.formVisible
-    },
-    showCardButtons() {
-      return !this.showForm && this.showCard
-    },
-    showCancelButton() {
-      return !this.screenIsLarge && this.isEditing
-    },
   },
   watch: {
     weekRange: {
@@ -201,23 +107,12 @@ export default {
 </script>
 
 <style scoped>
-.course-preview {
-  width: 90%;
-  margin: 2rem auto;
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.4s ease;
 }
-@media (min-width: 576px) {
-  .course-preview {
-    width: 70%;
-  }
-}
-@media (min-width: 768px) {
-  .course-preview {
-    width: 60%;
-  }
-}
-@media (min-width: 1024px) {
-  .course-preview {
-    width: 40%;
-  }
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
 }
 </style>

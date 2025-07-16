@@ -9,6 +9,7 @@ export async function handleApiResponse(res, defaultErrorMessage = 'Fehler') {
     return { error: true, message: defaultErrorMessage, data: null }
   }
 }
+
 export function buildErrorResponse(message = 'Ein Fehler ist aufgetreten') {
   return {
     error: true,

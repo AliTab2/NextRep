@@ -2,62 +2,65 @@ export function groupCoursesByDay(courses, weekRange) {
   const grouped = Array.from({ length: 7 }, () => [])
 
   for (const course of courses) {
-    const isRecurring = course.date.recurring === true
+    const isRecurring = course.dateInfo.recurrencePattern.includes('weekly')
 
-    const courseStart = new Date(course.date.weekRange.start)
-    courseStart.setHours(0, 0, 0, 0)
-
+    const courseStart = new Date(course.dateInfo.creationWeekRange.start)
     const currentWeekStart = new Date(weekRange.start)
     currentWeekStart.setHours(0, 0, 0, 0)
-
-    const courseEnd = course.date.repeatUntil ? new Date(course.date.repeatUntil) : null
-
-    if (courseEnd) {
-      courseEnd.setHours(0, 0, 0, 0)
-    }
-
+    courseStart.setHours(0, 0, 0, 0)
     const sameWeek = courseStart.getTime() === currentWeekStart.getTime()
     const recurringButNotStartedYet = isRecurring && courseStart > currentWeekStart
-    const recurringButAlreadyExpired = isRecurring && courseEnd && courseEnd <= currentWeekStart
-
-    const dayIndex = course.date.weekDay
+    const dayIndex = course.dateInfo.dayIndex
     const actualDate = getDateFromWeekRange(weekRange.start, dayIndex)
 
-    const internalExceptions = course.date.exceptions || []
-    const isExcluded = internalExceptions.some(
-      (date) => new Date(date).toDateString() === actualDate.toDateString(),
+    const courseExceptions = course.dateInfo.exceptions
+    const exceptionToday = courseExceptions.find(
+      (e) =>
+        new Date(e.dateInfo.creationWeekRange.start).toDateString() ===
+        weekRange.start.toDateString(),
     )
 
     if (!isRecurring && !sameWeek) continue
-    if (recurringButNotStartedYet || isExcluded || recurringButAlreadyExpired) continue
+    if (recurringButNotStartedYet) continue
+    if (exceptionToday?.status === 'deleted') continue
 
     grouped[dayIndex].push({
       ...course,
+      ...exceptionToday,
       actualDate,
+      exceptionDate: exceptionToday
+        ? {
+            weekRangeStart: exceptionToday.dateInfo.creationWeekRange.start,
+            dayIndex: exceptionToday.dateInfo.dayIndex,
+          }
+        : false,
     })
   }
   return [...grouped.slice(1), grouped[0]]
 }
 
-export function getDateFromWeekRange(weekStart, weekDay) {
+/**
+ *
+ * @param {'first' | 'last'} pos whether to get first n or last n days
+ * @param {number} num number of days to return
+ * @param {Array<Array>} courses 2D Array containing all week days with the corresponding courses. Every day is an array containing objects.
+ */
+export function getCoursesNDaysRange(pos, num, courses) {
+  if (pos === 'first') return courses.slice(0, num)
+  if (pos === 'last') return courses.slice(courses.length - num)
+  return []
+}
+
+export function getDateFromWeekRange(weekStart, dayIndex) {
   if (!(weekStart instanceof Date)) {
     weekStart = new Date(weekStart)
   }
 
-  // days number to jump from the start (from mo).
-  const moveDays = {
-    0: 6, // su: jump 6 days.
-    1: 0, // mo: jump 0 days, already at mo!
-    2: 1, // tu: jump 1 days
-    3: 2, // we: jump 2 days
-    4: 3, // th: jump 3 days
-    5: 4, // fr: jump 4 days
-    6: 5, // sa: jump 5 days
-  }
+  const moveDays = Number(dayIndex) === 0 ? 6 : Number(dayIndex) - 1
 
   const resultDate = new Date(weekStart)
   resultDate.setHours(0, 0, 0, 0)
-  resultDate.setDate(resultDate.getDate() + moveDays[weekDay])
+  resultDate.setDate(resultDate.getDate() + moveDays)
 
   return resultDate
 }
@@ -144,4 +147,8 @@ export function calcStoreWeekRange(baseStartDate, weekOffset) {
   end.setDate(start.getDate() + 6)
 
   return { start, end }
+}
+
+export function generateRange(start, end) {
+  return Array.from({ length: end - start + 1 }, (_, i) => ({ value: start + i, label: start + i }))
 }

@@ -1,15 +1,21 @@
 import { defineStore } from 'pinia'
-import { getAllHistory, getUserHistory, addHistoryEntry } from '@/api/historyApi.js'
+import {
+  getAllHistory,
+  getUserHistory,
+  addHistoryEntry,
+  sendNotification,
+} from '@/api/historyApi.js'
 import { handleApiResponse, buildErrorResponse } from '@/api/on.js'
 import useUserStore from '@/stores/userStore.js'
 
 export const useHistoryStore = defineStore('history', {
   state: () => ({
-    allHistory: [],
-    userHistory: [],
+    history: [],
     loading: false,
   }),
-
+  getters: {
+    userId: () => useUserStore().user.id,
+  },
   actions: {
     async fetchAllHistory() {
       this.loading = true
@@ -17,7 +23,7 @@ export const useHistoryStore = defineStore('history', {
         const res = await getAllHistory()
         const result = await handleApiResponse(res, 'Fehler beim Laden der Verlauf')
         if (!result.error) {
-          this.allHistory = result.data
+          this.history = result.data
         }
         return result
       } catch (err) {
@@ -35,7 +41,7 @@ export const useHistoryStore = defineStore('history', {
         const res = await getUserHistory(userId)
         const result = await handleApiResponse(res, 'Fehler beim Laden der Nutzer-Verlauf')
         if (!result.error) {
-          this.userHistory = result.data
+          this.history = result.data
         }
         return result
       } catch (err) {
@@ -46,13 +52,24 @@ export const useHistoryStore = defineStore('history', {
       }
     },
 
-    async createHistoryEntry({ action, message, userId }) {
+    async createHistoryEntry({ action, course, userId }) {
       try {
-        const res = await addHistoryEntry({ action, message, userId })
+        const res = await addHistoryEntry({ action, course, userId })
         const result = await handleApiResponse(res, 'Fehler beim Speichern des Verlauf-Eintrags')
         return result
       } catch (err) {
         console.error('Fehler beim Speichern des Verlauf-Eintrags:', err)
+        return buildErrorResponse()
+      }
+    },
+
+    async sendNotification({ group, notifications }) {
+      try {
+        const res = await sendNotification({ group, notifications, userId: this.userId })
+        const result = await handleApiResponse(res, 'Fehler beim Senden der Nachrichten:')
+        return result
+      } catch (err) {
+        console.error('Fehler beim Senden der Nachrichten:', err)
         return buildErrorResponse()
       }
     },
