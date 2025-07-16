@@ -85,7 +85,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useUserStore, ['getOneUser_store']),
+    ...mapActions(useUserStore, ['getOneUser']),
     updateUser(user) {
       this.userAccount = { ...user }
     },
