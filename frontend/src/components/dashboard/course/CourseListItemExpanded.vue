@@ -24,11 +24,11 @@ export default {
         const status = statusList.find((s) => s.value === e.status).label
         const date = getDateFromWeekRange(e.dateInfo?.creationWeekRange.start, e.dateInfo?.dayIndex)
         const trainer = e.trainer.map((t) => t.name).join(', ')
-        const isCancelled = e.status === 'cancelled'
+        const noTrainer = ['cancelled', 'deleted'].includes(e.status)
         return {
           status,
           date: date.toLocaleDateString('de-DE'),
-          trainer: !isCancelled ? trainer : false,
+          trainer: noTrainer ? false : trainer,
         }
       })
     },

@@ -49,6 +49,7 @@ const status = [
   { label: 'Ausfall', value: 'cancelled' },
   { label: 'Änderung', value: 'change' },
   { label: 'Special', value: 'special' },
+  { label: 'Gelöscht', value: 'deleted' },
 ]
 
 const courses = [

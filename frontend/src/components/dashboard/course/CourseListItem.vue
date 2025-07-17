@@ -85,7 +85,7 @@ export default {
       return this.course.dateInfo.exceptions || []
     },
     hasCourseExceptions() {
-      return Boolean(this.courseExceptions.length) === true
+      return Boolean(this.courseExceptions.length)
     },
   },
 }
