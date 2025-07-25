@@ -42,11 +42,7 @@ function generateWhatsAppMessage({ trainerName, changes = [], variant = 1 }) {
     1: `
 📢 *${trainerName}* hat den Kursplan aktualisiert!
 
-Was genau hat *${trainerName}* verändert?
-
 ${formattedChanges}
-
-⭕ *Werft mal nen Blick rein und verpasst nichts!*
     
 📌 Kursplan: https://next-rep.app
 `.trim(),

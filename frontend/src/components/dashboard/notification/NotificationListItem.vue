@@ -4,14 +4,14 @@
     :meta="metaInfo"
     :status="{ color: 'var(--color-text)' }"
     :show-checkbox="true"
-    :checkbox-value="`${notification._id}-${notification.log.log().full}`"
+    :checkbox-value="`${notification._id}-${notification.log.log().msg}`"
     :entry-id="notification._id"
     :checkbox-model="checkboxModel"
     @update:checkboxModel="$emit('update:checkboxModel', $event)"
     :expand-on-click="true"
   >
     <template #expanded>
-      <NotficationListItemExpanded :notification-log="notification.log.log().full" />
+      <NotficationListItemExpanded :notification-log="notification.log.log().msg" />
     </template>
   </SharedListItem>
 </template>

@@ -37,7 +37,7 @@ export default class CourseLogMessage {
     }[this.action]
   }
   courseDate() {
-    return `am ${this.day}, den ${this.date} um ${this.time} Uhr`
+    return `${this.day}, den ${this.date} um ${this.time} Uhr`
   }
   courseDuration() {
     return `(${this.duration} Minuten)`
@@ -55,37 +55,43 @@ export default class CourseLogMessage {
   add_one() {
     return {
       short: `${this.sport} ${this.courseAction()}.`,
-      full: `${this.courseEvent()} (Release ${this.release}) ${this.courseAction()}. Kurstermin: ${this.courseDate()} mit ${this.trainer} ${this.courseDuration()}.`,
+      full: `${this.courseEvent()} ${this.courseAction()}. Betroffen: ${this.courseDate()} mit ${this.trainer} ${this.courseDuration()}.`,
+      msg: `${this.courseEvent()} - ${this.courseDate()} mit ${this.trainer}.`,
     }
   }
   add_recurring() {
     return {
       short: `${this.sport} ${this.courseAction()}.`,
-      full: `${this.courseSeries()} ${this.courseAction()}. Kurstermine: wöchentlich am ${this.day} um ${this.time} Uhr mit ${this.trainer} ${this.courseDuration()}. Erster Kurstermin ${this.courseDate()}.`,
+      full: `${this.courseSeries()} ${this.courseAction()}. Betroffen: wöchentlich am ${this.day} um ${this.time} Uhr mit ${this.trainer} ${this.courseDuration()}.`,
+      msg: `${this.courseSeries()} - wöchentlich am ${this.day} um ${this.time} Uhr mit ${this.trainer}.`,
     }
   }
   edit_one() {
     return {
       short: `${this.sport} ${this.courseAction()}.`,
-      full: `${this.courseEvent()} am ${this.day}, den ${this.date} ${this.courseAction()}. Neuer Kurstermin (Release ${this.release}) ${this.courseDate()} mit ${this.trainer} ${this.courseDuration()}.`,
+      full: `${this.courseEvent()} ${this.courseAction()} - Betroffen: ${this.day}, den ${this.date}. Neuer Kurstermin: ${this.courseDate()} mit ${this.trainer}.`,
+      msg: `${this.courseEvent()} - ${this.courseDate()} mit ${this.trainer}.`,
     }
   }
   edit_all() {
     return {
       short: `${this.sport} ${this.courseAction()}.`,
-      full: `${this.courseSeries()} (wöchentlich am ${this.day}) ${this.courseAction()}. Die neuen Kurstermine finden jetzt jeweils ${this.courseDate()} mit ${this.trainer} ${this.courseDuration()} statt.`,
+      full: `${this.courseSeries()} ${this.courseAction()}. Betroffene: ${this.day}. Neue Kurstermine: ${this.courseDate()} mit ${this.trainer}`,
+      msg: `${this.courseSeries()} - wöchentlich am ${this.day} um ${this.time} Uhr mit ${this.trainer}.`,
     }
   }
   delete_one() {
     return {
       short: `${this.sport} ${this.courseAction()}.`,
-      full: `${this.courseEvent()} (am ${this.day}, den ${this.date}) ${this.courseAction()}.`,
+      full: `${this.courseEvent()} ${this.courseAction()} - Betroffen: ${this.courseDate()}`,
+      msg: `${this.courseEvent()} ${this.courseAction()} - Betroffen: ${this.day}, den ${this.date}`,
     }
   }
   delete_all() {
     return {
       short: `${this.sport} ${this.courseAction()}.`,
-      full: `${this.courseSeries()} (wöchentlich am ${this.day}) ${this.courseAction()}.`,
+      full: `${this.courseSeries()} ${this.courseAction()} - Betroffen: ${this.day}, den ${this.date}`,
+      msg: `${this.courseSeries()} ${this.courseAction()} - Betroffen: ${this.day}.`,
     }
   }
 }

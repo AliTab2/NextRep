@@ -58,8 +58,6 @@ router.get("/user", async (req, res) => {
 // ADD-COURSE
 router.post("/", checkRole(["superadmin", "admin"]), async (req, res) => {
   const course = req.body.course;
-  const msg = req.body.msg;
-  const userId = req.headers["x-user-id"];
 
   if (!validateCourse(course)) return res.status(400).json({});
 
@@ -84,8 +82,6 @@ router.put(
   checkRole(["superadmin", "admin"]),
   async (req, res) => {
     const updatedCourse = req.body.course;
-    const msg = req.body.msg;
-    const userId = req.headers["x-user-id"];
 
     if (!validateCourse(updatedCourse)) return res.status(400).json({});
     try {
@@ -111,9 +107,6 @@ router.delete(
   "/:courseId",
   checkRole(["superadmin", "admin"]),
   async (req, res) => {
-    const msg = req.query.msg;
-    const userId = req.headers["x-user-id"];
-
     try {
       const deleted = await Course.findByIdAndDelete(req.params.courseId);
       if (!deleted) return res.status(404).json({});
