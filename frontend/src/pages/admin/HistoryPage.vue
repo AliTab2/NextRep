@@ -48,8 +48,6 @@ export default {
       this.error = (await this.fetchUserHistory()).error
     }
 
-    console.log(this.history)
-
     this.entries = this.history.map((entry) => ({
       _id: entry._id,
       createdAt: entry.createdAt,

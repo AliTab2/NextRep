@@ -47,6 +47,9 @@ import {
   faUserPlus,
   faReceipt,
   faCoins,
+  faFileLines,
+  faFileExcel,
+  faFileCsv,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faCalendarDays } from '@fortawesome/free-regular-svg-icons'
@@ -100,6 +103,9 @@ library.add(
   faUserPlus,
   faReceipt,
   faCoins,
+  faFileLines,
+  faFileExcel,
+  faFileCsv,
 )
 import App from '@/App.vue'
 import router from '@/router/router.js'

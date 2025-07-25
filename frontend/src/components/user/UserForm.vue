@@ -44,7 +44,6 @@ import { validateUser } from '@/utils/validate.js'
 import { mapState, mapActions } from 'pinia'
 import useUserStore from '@/stores/userStore.js'
 import { userFormat, userStateList } from '@/utils/base.js'
-import { generateAdminLogObj } from '@/utils/logging'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 import CheckboxGroup from '../shared/CheckboxGroup.vue'
 
@@ -93,6 +92,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(useUserStore, ['updateUser', 'createUser']),
     handleSave() {
       if (this.isEditing) this.update()
       else this.add()
@@ -115,11 +115,7 @@ export default {
       this.user.password = this.password
 
       try {
-        const logObj = generateAdminLogObj('create', {
-          target_role: this.getUserMainRole,
-          target_name: this.user.name,
-        })
-        const res = await this.createUser_store(this.user, logObj)
+        const res = await this.createUser(this.user)
         if (res.error) {
           this.$emit('error', res.message)
         } else {
@@ -136,11 +132,7 @@ export default {
         this.isInvalid = true
       } else {
         try {
-          const logObj = generateAdminLogObj('edit', {
-            target_role: this.getUserMainRole,
-            target_name: this.user.name,
-          })
-          const res = await this.updateUser_store(this.user, logObj)
+          const res = await this.updateUser(this.user)
           if (res.error) {
             this.$emit('error', res.message)
           } else {
@@ -152,10 +144,9 @@ export default {
         }
       }
     },
-    updateUser() {
+    updateUserIntern() {
       this.$emit('update-user', this.user)
     },
-    ...mapActions(useUserStore, ['updateUser_store', 'createUser_store']),
   },
   computed: {
     formLabel() {
@@ -175,45 +166,26 @@ export default {
   watch: {
     name(val) {
       this.user.name = val
-      this.updateUser()
+      this.updateUserIntern()
     },
     password(val) {
       this.user.password = val
-      this.updateUser()
+      this.updateUserIntern()
     },
     status(val) {
       this.user.isBlocked = val === 'blocked'
-      this.updateUser()
+      this.updateUserIntern()
     },
     selectedCourses(val) {
       this.user.courses = [...val]
-      this.updateUser()
+      this.updateUserIntern()
     },
-    selectedRoles(val) {
-      // 1. conflict "trainer" vs. "worker"
-      const uiRoles = ['trainer', 'worker']
-      const selectedUi = val.filter((r) => uiRoles.includes(r))
-      if (selectedUi.length > 1) {
-        const last = val[val.length - 1]
-        this.selectedRoles = val.filter((r) => !uiRoles.includes(r)).concat(last)
-        return
-      }
-
-      // 2. conflict: "superadmin", "admin", "viewer"
-      const rbacRoles = ['superadmin', 'admin', 'viewer']
-      const selectedRBAC = val.filter((r) => rbacRoles.includes(r))
-      if (selectedRBAC.length > 1) {
-        const last = val[val.length - 1]
-        this.selectedRoles = val.filter((r) => !rbacRoles.includes(r)).concat(last)
-        return
-      }
-
+    selectedRoles() {
       if (!this.selectedRoles.includes('trainer')) {
         this.selectedCourses = []
       }
-
       this.user.roles = [...this.selectedRoles]
-      this.updateUser()
+      this.updateUserIntern()
     },
   },
 }

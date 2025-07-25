@@ -56,7 +56,7 @@ export default {
         {
           icon: 'fa-solid fa-receipt',
           label: 'Abrechnungen',
-          action: this.navigate.bind(this, { mode: 'push', to: { name: 'ComingSoon' } }),
+          action: this.navigate.bind(this, { mode: 'push', to: { name: 'Billing' } }),
         },
       ],
     }

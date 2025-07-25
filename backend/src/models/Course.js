@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const ExceptionSchema = new mongoose.Schema({
   sport: { type: String, required: true },
   release: { type: Number, required: true },
-  trainer: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  trainer: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   status: { type: String },
   timeInfo: {
     hour: Number,
@@ -18,32 +18,32 @@ const ExceptionSchema = new mongoose.Schema({
     },
     recurrencePattern: String,
   },
-  _id: false // optional: verhindert das automatische Generieren einer _id für jede Exception
-})
+  _id: false,
+});
 
-const CourseSchema = new mongoose.Schema({
-  sport: { type: String, required: true },
-  release: { type: Number, required: true },
-  trainer: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],  
-  timeInfo: {
-    hour: { type: Number, required: true },
-    minute: { type: Number, default: 0 },
-    duration: { type: Number, required: true },
-  },
-  dateInfo: {
-    creationWeekRange: {
-      start: { type: String, required: true },
-      end: { type: String, required: true },
+const CourseSchema = new mongoose.Schema(
+  {
+    sport: { type: String, required: true },
+    release: { type: Number, required: true },
+    trainer: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    timeInfo: {
+      hour: { type: Number, required: true },
+      minute: { type: Number, default: 0 },
+      duration: { type: Number, required: true },
     },
-    dayIndex: { type: Number, required: true },
-    recurrencePattern: { type: String, required: true },
-    exceptions: [ExceptionSchema],
+    dateInfo: {
+      creationWeekRange: {
+        start: { type: String, required: true },
+        end: { type: String, required: true },
+      },
+      dayIndex: { type: Number, required: true },
+      recurrencePattern: { type: String, required: true },
+      exceptions: [ExceptionSchema],
+    },
+    status: { type: String, required: true },
   },
-  status: { type: String, required: true },
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-const Course = mongoose.model('Course', CourseSchema);
+const Course = mongoose.model("Course", CourseSchema);
 export default Course;
-
-
-
