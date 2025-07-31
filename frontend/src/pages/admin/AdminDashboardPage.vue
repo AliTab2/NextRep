@@ -6,7 +6,7 @@
         status="warning"
         @click="showGreeting = false"
         :auto-close="false"
-        >Wilkommen zurück, Ali
+        >Wilkommen zurück, {{ user.name }}
         <font-awesome-icon icon="fa-solid fa-face-grin-stars" />
       </BaseMessage>
     </div>
@@ -27,6 +27,9 @@
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 import { usePermission } from '@/composables/usePermission.js'
 import OptionCard from '@/components/shared/OptionCard.vue'
+import useUserStore from '@/stores/userStore'
+import { mapState } from 'pinia'
+
 export default {
   components: {
     OptionCard,
@@ -35,6 +38,9 @@ export default {
     const { navigate } = useSmartNavigation()
     const { hasPermission } = usePermission()
     return { navigate, hasPermission }
+  },
+  computed: {
+    ...mapState(useUserStore, ['user']),
   },
   data() {
     return {

@@ -82,7 +82,7 @@ export default {
       return ''
     },
     courseExceptions() {
-      return this.course.dateInfo.exceptions || []
+      return this.course.dateInfo.exceptions.filter((e) => e.status !== 'regular') || []
     },
     hasCourseExceptions() {
       return Boolean(this.courseExceptions.length)
