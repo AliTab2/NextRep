@@ -16,11 +16,13 @@ router.get("/", async (_req, res) => {
 
 // ADD SPORT
 router.post("/", checkRole(["superadmin", "admin"]), async (req, res) => {
-  const sportObj = req.body.sport;
+  const sport = req.body.sport;
+  const color = req.body.color;
   try {
-    const cleanSport = { ...sportObj };
-    delete cleanSport._id;
-    const newSport = new Sport(cleanSport);
+    const found = await Sport.findOne({ sport });
+    if (found) return res.status(409).json({ message: "Sportart vorhanden" });
+
+    const newSport = new Sport({ sport, color });
     await newSport.save();
     return res.status(201).json({});
   } catch (err) {
@@ -34,11 +36,12 @@ router.put(
   "/:sportId",
   checkRole(["superadmin", "admin"]),
   async (req, res) => {
-    const updatedSport = req.body.sport;
+    const newSport = req.body.sport;
+    const color = req.body.color;
     try {
       const sport = await Sport.findByIdAndUpdate(
         req.params.sportId,
-        updatedSport,
+        { sport: newSport, color },
         { new: true }
       );
       if (!sport) return res.status(404).json({});

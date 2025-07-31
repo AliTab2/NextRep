@@ -3,74 +3,70 @@ import express from "express";
 const router = express.Router();
 import User from "../models/User.js";
 
-export async function createBillingWorkbook(courses, trainer, month) {
+export async function createBillingWorkbook(
+  courses,
+  trainer,
+  month,
+  vacationDates = []
+) {
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Monatsabrechnung");
+  await workbook.xlsx.readFile("./billing.xlsx");
+  const sheet = workbook.getWorksheet(1);
 
-  sheet.columns = [
-    { header: "Sportart", key: "sport", width: 20 },
-    { header: "Datum", key: "date", width: 15 },
-    { header: "Beginn", key: "start", width: 10 },
-    { header: "Ende", key: "end", width: 10 },
-    { header: "Dauer (Min)", key: "duration", width: 15 },
-    { header: "Betrag (€)", key: "amount", width: 15 },
-  ];
+  // headers
+  const trainerField = "D8:F8";
+  const companyField = "D9:F9";
+  const monthField = "D10:F10";
 
-  courses.forEach((c) => {
-    sheet.addRow(c);
+  sheet.getCell(trainerField).value = trainer;
+  sheet.getCell(companyField).value = "clever fit GmbH";
+  sheet.getCell(monthField).value = month;
+
+  let latestCourseRowIndex = 0;
+  const vacationRow = (index) => sheet.getRow(latestCourseRowIndex + index);
+
+  // courses
+  courses.forEach((c, i) => {
+    const index = 14 + i;
+    latestCourseRowIndex = index; // needed to sign vacation dates afterwards!
+    const row = sheet.getRow(index);
+
+    const dateCell = row.getCell("B");
+    const startCell = row.getCell("C");
+    const endCell = row.getCell("D");
+    const durationCell = row.getCell("F");
+    const amountCell = row.getCell("G");
+
+    dateCell.value = c.date;
+    startCell.value = c.start;
+    endCell.value = c.end;
+    durationCell.value =
+      c.duration < 60 ? `00:${c.duration}:00` : `0${1}:00:00`;
+    amountCell.value = c.amount;
   });
 
-  sheet.eachRow({ includeEmpty: false }, (row) => {
-    row.eachCell({ includeEmpty: true }, (cell) => {
-      cell.font = {
-        name: "Calibri",
-        size: 11,
-        color: { argb: "FF000000" },
-      };
+  if (vacationDates.length > 0) {
+    vacationDates.forEach((d, i) => {
+      const row = vacationRow(i + 1);
+      const dateCell = row.getCell("B");
+      const descriptionCell = row.getCell("G");
 
-      cell.border = {
-        top: { style: "thin", color: { argb: "FF000000" } },
-        bottom: { style: "thin", color: { argb: "FF000000" } },
-        left: { style: "thin", color: { argb: "FF000000" } },
-        right: { style: "thin", color: { argb: "FF000000" } },
-      };
-
-      cell.alignment = {
-        vertical: "middle",
-        horizontal: "left",
-      };
+      dateCell.value = d;
+      descriptionCell.value = "Urlaub";
     });
-  });
+  }
 
-  const total = courses.reduce((sum, curr) => {
+  // total amount
+  const totalAmountCell = sheet.getCell("G44:J44");
+  totalAmountCell.value = courses.reduce((sum, curr) => {
     return sum + curr.amount;
   }, 0);
-  sheet.addRow([]);
-  sheet.addRow(["", "", "", "", "", `Gesamt: ${total}`]);
 
-  const trainerInfo = {
-    trainer: trainer,
-    company: "clever fit GmbH",
-    month: month,
-    employment: "Kurstrainer*in / 538 €",
-  };
-
-  sheet.addRow(["Mitarbeiter", trainerInfo.trainer]);
-  sheet.addRow(["Firma", trainerInfo.company]);
-  sheet.addRow(["Monat", trainerInfo.month]);
-  sheet.addRow(["Beschäftigung", trainerInfo.employment]);
-  sheet.addRow([]);
-
-  sheet.addRow([]);
-  sheet.addRow(["Datum / Unterschrift Arbeitnehmer:"]);
-  sheet.addRow([]);
-  sheet.addRow(["Datum / Kontrolle Studioleitung:"]);
-  sheet.addRow([]);
-  sheet.addRow(["Datum / Kontrolle Arbeitgeber:"]);
-  sheet.addRow([]);
-
-  sheet.addRow([]);
-  sheet.addRow(["Erstellt von NextRep (https://www.next-rep.app)"]);
+  // total hours
+  const totalHoursCell = sheet.getCell("F46");
+  totalHoursCell.value = courses.reduce((sum, curr) => {
+    return sum + curr.duration / 60;
+  }, 0);
 
   return workbook;
 }
@@ -79,6 +75,7 @@ router.post("/", async (req, res) => {
   try {
     const courses = req.body.courses;
     const month = req.body.month;
+    const vacationDates = req.body.vacationDates;
     const userId = req.headers["x-user-id"];
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({});
@@ -86,7 +83,8 @@ router.post("/", async (req, res) => {
     const workbook = await createBillingWorkbook(
       courses,
       user.billingName,
-      month
+      month,
+      vacationDates
     );
     const buffer = await workbook.xlsx.writeBuffer();
 

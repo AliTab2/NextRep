@@ -72,14 +72,9 @@ export default {
     async deleteUserAccount() {
       try {
         const res = await this.deleteUser(this.user._id)
-        if (res.error) {
-          this.$emit('error', res.message)
-        } else {
-          this.$emit('success', 'Benutzer wurde erfolgreich gelöscht')
-        }
+        if (!res.error) this.$emit('success')
       } catch (err) {
         console.log('Fehler in deleteUserAccount()', err)
-        this.$emit('error', 'Ein unerwarteter Fehler ist aufgetreten')
       }
     },
   },
@@ -95,7 +90,7 @@ export default {
       )
     },
     getUserMainRole() {
-      const mainRoleArray = this.user.roles.filter((r) => r !== 'trainer' && r !== 'worker')
+      const mainRoleArray = this.user.roles.filter((r) => r !== 'trainer')
       return mainRoleArray[0]
     },
   },

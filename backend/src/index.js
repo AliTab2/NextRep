@@ -5,6 +5,7 @@ import courseRoutes from "./routes/courseRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
 import billingRoutes from "./routes/billingRoutes.js";
+import sportRoutes from "./routes/sportRoutes.js";
 import cors from "cors";
 
 dotenv.config();
@@ -33,6 +34,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/billing", billingRoutes);
+app.use("/api/sports", sportRoutes);
 
 // MongoDB verbinden
 mongoose

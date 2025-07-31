@@ -14,6 +14,7 @@
         :disabled="disabled"
         :maxlength="length"
         ref="inputRef"
+        :style="{ color: textColor }"
       />
       <slot name="append" />
     </div>
@@ -39,6 +40,7 @@ const props = defineProps({
     default: false,
   },
   length: { type: String, required: false },
+  textColor: { type: String, required: false, default: 'var(--color-text)' },
 })
 
 const inputRef = ref(null)
@@ -53,11 +55,10 @@ function handleBlur() {
 const isFocused = ref(false)
 
 const isValid = computed(() => {
-  return !!props.modelValue // leer = ungültig
+  return !!props.modelValue
 })
 
 const shouldShowError = computed(() => {
-  // Nur Fehler anzeigen, wenn vom Parent als Fehler markiert UND der Input noch leer ist
   return props.inValid && !isValid.value
 })
 

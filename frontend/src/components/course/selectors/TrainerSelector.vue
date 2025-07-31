@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions } from 'pinia'
+import { mapActions, mapState } from 'pinia'
 import useUserStore from '@/stores/userStore.js'
 import FormFieldMixin from '@/mixins/FormFieldMixin'
 import CheckboxGroup from '@/components/shared/CheckboxGroup.vue'
@@ -19,19 +19,15 @@ export default {
   components: {
     CheckboxGroup,
   },
-  data() {
-    return {
-      users: [],
-    }
-  },
   async created() {
-    const allUsers = await this.getAllUsers()
-    this.users = allUsers.data
+    const res = await this.getAllUsers()
+    if (res.error) return
   },
   methods: {
     ...mapActions(useUserStore, ['getAllUsers']),
   },
   computed: {
+    ...mapState(useUserStore, ['users']),
     trainers() {
       return this.users
         .filter((u) => u.roles.includes('trainer'))

@@ -116,14 +116,9 @@ export default {
 
       try {
         const res = await this.createUser(this.user)
-        if (res.error) {
-          this.$emit('error', res.message)
-        } else {
-          this.$emit('success', 'Benutzer wurde erfolgreich erstellt')
-        }
+        if (!res.error) this.$emit('success')
       } catch (err) {
         console.error('Fehler in add():', err)
-        this.$emit('error', 'Ein unerwarteter Fehler ist aufgetreten')
       }
     },
     async update() {
@@ -133,14 +128,9 @@ export default {
       } else {
         try {
           const res = await this.updateUser(this.user)
-          if (res.error) {
-            this.$emit('error', res.message)
-          } else {
-            this.$emit('success', 'Benutzer wurde erfolgreich aktualisiert')
-          }
+          if (!res.error) this.$emit('success')
         } catch (err) {
           console.error('Fehler in update():', err)
-          this.$emit('error', 'Ein unerwarteter Fehler ist aufgetreten')
         }
       }
     },

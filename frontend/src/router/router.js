@@ -93,10 +93,10 @@ const router = createRouter({
           component: () => import('@/pages/admin/BillingPage.vue'),
         },
         {
-          path: 'comin-soon',
-          name: 'ComingSoon',
+          path: 'sports',
+          name: 'Sport',
           meta: { allowedRoles: ['superadmin', 'admin'] },
-          component: () => import('@/pages/admin/ComingSoonPage.vue'),
+          component: () => import('@/pages/admin/SportsPage.vue'),
         },
       ],
     },

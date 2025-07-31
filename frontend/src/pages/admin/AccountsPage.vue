@@ -2,6 +2,9 @@
   <PageContainer :is-loading="isLoading">
     <template #header>
       <AccountPageHeader />
+      <BaseMessage v-if="user.msg" :status="user.status" :key="Date.now()">
+        {{ user.msg }}
+      </BaseMessage>
     </template>
     <template #main>
       <DataSection :not-found="notFound" not-found-item="Konten">
@@ -21,6 +24,7 @@ import PageContainer from '@/components/dashboard/ui/PageContainer.vue'
 import AccountPageHeader from '@/components/dashboard/account/AccountPageHeader.vue'
 import DataSection from '@/components/dashboard/ui/DataSection.vue'
 import AccountListItem from '@/components/dashboard/account/AccountListItem.vue'
+import useMessageStore from '@/stores/messageStore'
 
 export default {
   components: {
@@ -39,6 +43,12 @@ export default {
       error: false,
     }
   },
+  mounted() {
+    this.clearMessage('user')
+  },
+  beforeUnmount() {
+    this.clearMessage('user')
+  },
   async created() {
     if (this.hasPermission('view:registered-admins')) {
       this.error = (await this.getAllUsers()).error
@@ -50,12 +60,14 @@ export default {
   },
   methods: {
     ...mapActions(useUserStore, ['getOneUser', 'getAllUsers']),
+    ...mapActions(useMessageStore, ['clearMessage']),
     goToAddUserPage() {
       this.navigate({ mode: 'push', to: { name: 'AdminUserAdd' } })
     },
   },
   computed: {
     ...mapState(useUserStore, ['users']),
+    ...mapState(useMessageStore, ['user']),
     notFound() {
       return Boolean(this.users.length) === false || this.error
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="auth-container">
-    <BaseMessage v-if="statusMessage" :status="statusType" :key="Date.now()">
-      {{ statusMessage }}
+    <BaseMessage v-if="messageStore.user.msg" :status="messageStore.user.status" :key="Date.now()">
+      {{ messageStore.user.msg }}
     </BaseMessage>
     <BaseLoader v-if="isLoading" />
     <div class="wrapper">
@@ -13,23 +13,14 @@
           </h1>
         </template>
         <template v-else>
-          <div class="wrapper">
-            <h1>Bitte Zugangscode eingeben:</h1>
-            <div class="code-inputs">
-              <BaseInput
-                v-for="(char, index) in codeLength"
-                :key="index"
-                variant="auth"
-                length="1"
-                v-model="code[index]"
-                @input="onInput(index, $event)"
-                @keydown.backspace="onBackspace(index, $event)"
-                ref="inputs"
-                inputmode="numeric"
-                type="tel"
-              />
-            </div>
-          </div>
+          <base-form title="Login" style="width: 90%">
+            <BaseInput
+              v-model="code"
+              label="Zugangscode"
+              placeholder="Bitte den 6-stelligen Code eingeben"
+              :disabled="isLoading"
+            />
+          </base-form>
         </template>
       </transition>
     </div>
@@ -37,17 +28,25 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useUserStore from '@/stores/userStore.js'
+import BaseInput from '@/components/base/form/BaseInput.vue'
+import useMessageStore from '@/stores/messageStore'
+const messageStore = useMessageStore()
+
+onMounted(() => {
+  messageStore.clearMessage('user')
+})
+onBeforeUnmount(() => {
+  messageStore.clearMessage('user')
+})
 
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 
-const codeLength = 6
-const code = reactive(Array(codeLength).fill(''))
-const inputs = ref([])
+const code = ref('')
 const statusMessage = ref('')
 const statusType = ref('')
 
@@ -66,40 +65,18 @@ watch(
   { immediate: true },
 )
 
-function onInput(index, event) {
-  const value = event.target.value
-  if (value && index < codeLength - 1) {
-    inputs.value[index + 1]?.focus()
-  }
-}
-
-function onBackspace(index) {
-  statusMessage.value = ''
-  statusType.value = ''
-  if (!code[index] && index > 0) {
-    inputs.value[index - 1]?.focus()
-  }
-}
-
-watch(code, async () => {
-  const fullCode = code.join('')
-
-  if (fullCode.length !== 6) return
+watch(code, async (value) => {
+  if (value.length !== 6) return
 
   isLoading.value = true
-  const res = await userStore.login(fullCode)
+  const res = await userStore.login(value)
   isLoading.value = false
 
-  if (res?.error) {
-    statusMessage.value = res?.message || 'Login fehlgeschlagen'
-    statusType.value = 'error'
-  } else {
-    statusMessage.value = 'Login erfolgreich!'
-    statusType.value = 'success'
-    setTimeout(() => {
-      router.push({ name: 'AdminDashboard' })
-    }, 1000)
-  }
+  if (res.error) return
+
+  setTimeout(() => {
+    router.push({ name: 'AdminDashboard' })
+  }, 1000)
 })
 </script>
 
@@ -110,30 +87,14 @@ watch(code, async () => {
   flex-direction: column;
 }
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  padding-top: 4rem;
   height: 100%;
-  gap: 2rem;
-}
-
-.code-inputs {
-  display: flex;
-  gap: 1rem;
-}
-
-h1 {
-  font-size: 1.6rem;
-  text-align: center;
-  width: 70%;
 }
 
 h1.blocked,
 h1.access {
   font-size: 4rem;
 }
-
 @media (min-width: 576px) {
   h1 {
     font-size: 1.8rem;

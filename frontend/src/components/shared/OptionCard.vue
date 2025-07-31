@@ -38,7 +38,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 4rem;
+  font-size: 3rem;
   color: #db1200;
 }
 .dashboard-option__text {
@@ -48,7 +48,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  font-size: 1.7rem;
+  font-size: 1.3rem;
   color: #000;
   font-weight: bold;
 }
@@ -57,33 +57,52 @@ export default {
   cursor: pointer;
 }
 
-@media (min-width: 576px) {
-  .dashboard-option {
-    width: calc((100% / 3) - 2rem);
-  }
+@media (min-width: 400px) {
   .dashboard-option__icon {
     font-size: 4rem;
   }
   .dashboard-option__text {
-    font-size: 2rem;
+    font-size: 1.6rem;
+  }
+}
+@media (min-width: 500px) {
+  .dashboard-option__icon {
+    font-size: 5rem;
+  }
+  .dashboard-option__text {
+    font-size: 1.8rem;
+  }
+}
+@media (min-width: 576px) {
+  .dashboard-option {
+    width: calc((100% / 3) - 2rem);
   }
 }
 @media (min-width: 768px) {
   .dashboard-option {
     width: calc((100% / 4) - 2rem);
   }
+  .dashboard-option__text {
+    font-size: 1.8rem;
+  }
 }
 @media (min-width: 1024px) {
   .dashboard-option {
     width: calc((100% / 6) - 2rem);
   }
-}
-@media (min-width: 1280px) {
   .dashboard-option__icon {
     font-size: 5rem;
   }
   .dashboard-option__text {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
+  }
+}
+@media (min-width: 1280px) {
+  .dashboard-option__icon {
+    font-size: 6rem;
+  }
+  .dashboard-option__text {
+    font-size: 2.2rem;
   }
 }
 </style>

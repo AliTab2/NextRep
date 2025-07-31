@@ -1,6 +1,6 @@
 <template>
   <div class="app-header__brand">
-    <h1 class="app-header__title" @click="navigate({ mode: 'push', to: { name: 'Home' } })">
+    <h1 class="app-header__title" @click="navigate({ mode: 'push', to: { name: 'Calendar' } })">
       NextRep
     </h1>
     <p class="app-header__subtitle">CleverFit-Kurse</p>
@@ -34,7 +34,6 @@ const { navigate } = useSmartNavigation()
 .app-header__subtitle {
   font-size: 1.4rem;
   font-weight: bold;
-  color: #db1200;
-  /* margin-top: 0; */
+  color: var(--color-primary);
 }
 </style>

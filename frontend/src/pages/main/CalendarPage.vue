@@ -11,6 +11,8 @@ import { getCoursesNDaysRange, groupCoursesByDay } from '@/utils/calendar'
 import useCourseStore from '@/stores/courseStore.js'
 import { mapActions, mapState } from 'pinia'
 import { weekDays } from '@/utils/base'
+import useMessageStore from '@/stores/messageStore'
+import useSportStore from '@/stores/sportStore'
 
 export default {
   components: {
@@ -22,24 +24,19 @@ export default {
     }
   },
   async created() {
-    const res = await this.getAllCourses()
-    const store = useCourseStore()
-    store.isLoading = false
-    store.calendarView = this.currentCalendarView
-
-    if (res.error) {
-      store.statusMessage = res.message || 'Kurse konnten nicht geladen werden.'
-      store.statusType = 'error'
-    }
+    this.updateStateValue('calendarView', this.currentCalendarView)
+    this.updateStateValue('isLoadingCourses', true)
+    await this.getAllCourses()
+    await this.getAllSports()
+    this.updateStateValue('isLoadingCourses', false)
+  },
+  beforeUnmount() {
+    this.clearMessage('course')
   },
   methods: {
-    ...mapActions(useCourseStore, ['getAllCourses']),
-  },
-  mounted() {
-    const store = useCourseStore()
-    store.statusMessage = this.$route.query.message
-    store.statusType = this.$route.query.status
-    this.$router.replace({ query: {} })
+    ...mapActions(useCourseStore, ['getAllCourses', 'updateStateValue']),
+    ...mapActions(useMessageStore, ['clearMessage']),
+    ...mapActions(useSportStore, ['getAllSports']),
   },
   computed: {
     ...mapState(useCourseStore, ['courses', 'weekRange', 'isExporting', 'calendarView']),
@@ -110,11 +107,11 @@ export default {
 
 <style>
 .calendar-page {
-  height: 100%;
+  height: calc(100% - 7rem);
   display: flex;
   flex-direction: column;
   padding-bottom: 1rem;
-  background-color: #db1200;
+  background-color: whitesmoke;
 }
 
 @media (min-width: 1024px) {

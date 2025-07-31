@@ -1,17 +1,33 @@
 <template>
-  <BaseOptions label="Sportart" :options="courses" v-model="internalValue" :in-valid="isInvalid" />
+  <BaseOptions
+    label="Sportart"
+    :options="sportsArray"
+    v-model="internalValue"
+    :in-valid="isInvalid"
+  />
 </template>
 
 <script>
 import FormFieldMixin from '@/mixins/FormFieldMixin'
-import { coursesList } from '@/utils/base.js'
+import useSportStore from '@/stores/sportStore'
+import { mapActions, mapState } from 'pinia'
 
 export default {
   mixins: [FormFieldMixin],
-  data() {
-    return {
-      courses: coursesList.map((c) => ({ ...c })),
-    }
+  async created() {
+    const result = await this.getAllSports()
+    if (result.error) return
+  },
+  methods: {
+    ...mapActions(useSportStore, ['getAllSports']),
+  },
+  computed: {
+    ...mapState(useSportStore, ['sports']),
+    sportsArray() {
+      return this.sports.map((s) => {
+        return { label: s.sport, value: s.sport }
+      })
+    },
   },
 }
 </script>

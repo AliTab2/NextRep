@@ -1,12 +1,22 @@
 <template>
-  <PageContainer :is-loading="false">
+  <PageContainer :is-loading="isLoading">
     <template #header>
-      <BillingPageHeader @generate-billing="generateBilling" />
-      <BaseMessage v-if="statusMessage" :status="statusType">
-        {{ statusMessage }}
+      <BillingPageHeader :button-disabled="isLoading" @generate-billing="generateBilling" />
+      <BaseMessage
+        v-if="billing.msg || course.msg"
+        :status="billing.status || course.status"
+        :key="Date.now()"
+      >
+        {{ billing.msg || course.msg }}
       </BaseMessage>
     </template>
     <template #main>
+      <CheckboxGroup
+        placeholder-label="Keine Urlaubstage gewählt"
+        :label="vacationDatesSelectorLabel"
+        v-model="selectedVacationDates"
+        :options="vacationDates"
+      />
       <DataSection :not-found="true" not-found-item="Abrechnungen" />
     </template>
   </PageContainer>
@@ -24,32 +34,45 @@ import {
   calcStartTime,
   calcEndTime,
   calcCurrentMonthAndYear,
+  generateRange,
 } from '@/utils/calendar'
-import { useBillingStore } from '@/stores/billingStore'
+import useBillingStore from '@/stores/billingStore'
+import useMessageStore from '@/stores/messageStore'
+import CheckboxGroup from '@/components/shared/CheckboxGroup.vue'
 
 export default {
   components: {
     PageContainer,
     BillingPageHeader,
     DataSection,
+    CheckboxGroup,
+  },
+  mounted() {
+    this.clearMessage()
+  },
+  beforeUnmount() {
+    this.clearMessage()
   },
   data() {
     return {
       plannedCourseEvents: [],
       attendedCourseEvents: [],
       billingCourseEvents: [],
-      statusMessage: '',
-      statusType: '',
+      isLoading: false,
+      selectedVacationDates: [],
     }
   },
   methods: {
     ...mapActions(useCourseStore, ['getUserCourses']),
     ...mapActions(useBillingStore, ['createBilling']),
+    ...mapActions(useMessageStore, ['clearMessage']),
     async generateBilling() {
+      this.clearMessage()
+
+      this.isLoading = true
       const coursesResult = await this.getUserCourses()
-      if (coursesResult.error || coursesResult.data.length === 0) {
-        this.statusMessage = coursesResult.error || 'Abrechnung kann nicht erstellt werden.'
-        this.statusType = 'error'
+      if (coursesResult.error) {
+        this.isLoading = false
         return
       }
 
@@ -70,29 +93,58 @@ export default {
         .concat(this.onceBillingObjects)
         .concat(this.activeExceptionsBillingObjects)
 
+      this.isLoading = true
+
       const blob = await this.createBilling(
         this.billingCourseEvents,
         calcCurrentMonthAndYear(new Date(), 0),
+        this.selectedVacationDates,
       )
 
-      if (!blob || blob.error) {
-        this.statusMessage = blob?.message || 'Fehler beim Erstellen der Abrechnung'
-        this.statusType = 'error'
-      } else {
-        this.statusMessage = 'Abrechnung wurde erfolgreich erstellt.'
-        this.statusType = 'success'
-
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = 'NextRep-Monatsabrechnung.xlsx'
-        link.click()
-        window.URL.revokeObjectURL(url)
+      if (!blob) {
+        this.isLoading = false
+        return
       }
+
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'NextRep-Monatsabrechnung.xlsx'
+      link.click()
+      window.URL.revokeObjectURL(url)
+
+      this.isLoading = false
+      this.selectedVacationDates = []
     },
   },
   computed: {
     ...mapState(useCourseStore, ['courses']),
+    ...mapState(useMessageStore, ['billing', 'course']),
+    vacationDates() {
+      return generateRange(1, getDaysInMonth(new Date())).map((obj, i) => {
+        const currYear = new Date().getFullYear()
+        const currMonth = new Date().getMonth()
+        const currDate = new Date(currYear, currMonth, i + 1)
+        const formattedLabel = currDate.toLocaleDateString('de-DE', {
+          day: '2-digit',
+          month: '2-digit',
+          year: '2-digit',
+        })
+        const formattedValue = currDate.toLocaleDateString('de-DE', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        })
+
+        return {
+          label: formattedLabel,
+          value: formattedValue,
+        }
+      })
+    },
+    vacationDatesSelectorLabel() {
+      return `Urlaubstage (${calcCurrentMonthAndYear(new Date(), 0)})`
+    },
     weeklyCourses() {
       return this.courses.filter((c) => c.dateInfo?.recurrencePattern === 'weekly')
     },
@@ -140,6 +192,13 @@ export default {
       })
     },
   },
+  watch: {
+    'billing.msg'() {
+      setTimeout(() => {
+        this.clearMessage()
+      }, 3000)
+    },
+  },
 }
 
 export function getAllDatesForWeeklyCourse(course) {
@@ -174,7 +233,6 @@ export function getAllDatesForWeeklyCourse(course) {
 
 function toBillingObj(course, date) {
   return {
-    sport: course.sport,
     date: date.toLocaleDateString('de-De', {
       month: '2-digit',
       day: '2-digit',

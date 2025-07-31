@@ -2,6 +2,9 @@
   <PageContainer :is-loading="isLoading">
     <template #header>
       <PageHeader :heading="heading" />
+      <BaseMessage v-if="historyMessage.msg" :status="historyMessage.status" :key="Date.now()">
+        {{ historyMessage.msg }}
+      </BaseMessage>
     </template>
     <template #main>
       <DataSection :not-found="notFound" not-found-item="Einträge">
@@ -14,7 +17,7 @@
 </template>
 
 <script>
-import { useHistoryStore } from '@/stores/historyStore'
+import useHistoryStore from '@/stores/historyStore'
 import { usePermission } from '@/composables/usePermission.js'
 import { mapState, mapActions } from 'pinia'
 import CourseLogMessage from '@/models/CourseLogMessage'
@@ -22,6 +25,7 @@ import PageContainer from '@/components/dashboard/ui/PageContainer.vue'
 import PageHeader from '@/components/dashboard/ui/PageHeader.vue'
 import DataSection from '@/components/dashboard/ui/DataSection.vue'
 import HistoryListItem from '@/components/dashboard/history/HistoryListItem.vue'
+import useMessageStore from '@/stores/messageStore'
 
 export default {
   components: {
@@ -36,6 +40,12 @@ export default {
       isLoading: true,
       error: false,
     }
+  },
+  mounted() {
+    this.clearMessage('history')
+  },
+  beforeUnmount() {
+    this.clearMessage('history')
   },
   setup() {
     const { hasPermission } = usePermission()
@@ -60,9 +70,11 @@ export default {
   },
   methods: {
     ...mapActions(useHistoryStore, ['fetchAllHistory', 'fetchUserHistory']),
+    ...mapActions(useMessageStore, ['clearMessage']),
   },
   computed: {
     ...mapState(useHistoryStore, ['history']),
+    ...mapState(useMessageStore, { historyMessage: 'history' }),
     heading() {
       if (this.hasPermission('view:all-history')) return 'Verlauf'
       return 'Mein Verlauf'

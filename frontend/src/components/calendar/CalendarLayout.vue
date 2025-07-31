@@ -1,5 +1,5 @@
 <template>
-  <div class="calendar-body glass">
+  <div class="calendar-body">
     <WeekDaysHeader :days="partOfWeek.days" />
     <WeekEventGrid :courses="partOfWeek.courses" />
   </div>
@@ -22,16 +22,7 @@ export default {
   },
 }
 </script>
-
 <style scoped>
-.glass {
-  background: rgba(255, 255, 255);
-  backdrop-filter: blur(0.5rem);
-  -webkit-backdrop-filter: blur(1rem);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 1rem;
-}
-
 .calendar-body {
   width: 98%;
   margin: 1rem auto 0;
@@ -44,6 +35,7 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-height: 0;
   overflow-y: auto;
+  background: rgba(255, 255, 255);
 }
 
 .calendar-body::-webkit-scrollbar {

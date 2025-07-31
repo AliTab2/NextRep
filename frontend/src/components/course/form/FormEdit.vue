@@ -39,7 +39,11 @@
         <base-button variant="delete" @click="navigate({ mode: 'back', fallback: '/calendar' })"
           >Abbrechen</base-button
         >
-        <base-button variant="dark" @click="handleCourseValidation" :is-loading="isLoading"
+        <base-button
+          variant="dark"
+          @click="handleCourseValidation"
+          :is-loading="isLoading"
+          :disabled="disableButton"
           >Speichern</base-button
         >
       </div>
@@ -64,13 +68,14 @@ import StatusSelector from '@/components/course/selectors/StatusSelector.vue'
 import EditCourseModal from '@/components/course/modals/EditCourseModal.vue'
 
 import { ref } from 'vue'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 import Course from '@/models/Course'
 import TimeInfo from '@/models/TimeInfo'
 import DateInfo from '@/models/DateInfo'
 import { CourseService } from '@/services/courseService'
 import useCourseStore from '@/stores/courseStore'
+import useMessageStore from '@/stores/messageStore'
 
 export default {
   components: {
@@ -122,10 +127,12 @@ export default {
       invalidInputs: ref([]),
       isLoading: false,
       showEditModal: false,
+      disableButton: true,
       changeScope: 'once',
     }
   },
   methods: {
+    ...mapActions(useMessageStore, ['clearMessage']),
     handleCourseValidation() {
       const { invalid, invalidInputs } = this.course.isValid()
       if (invalid) {
@@ -141,10 +148,13 @@ export default {
       }
     },
     async updateCourse() {
+      this.clearMessage('course')
       this.showEditModal = false
       this.course._id = this.originalCourse._id
 
       let result = null
+
+      this.isLoading = true
 
       // one entry
       if (this.changeScope === 'once') {
@@ -157,18 +167,26 @@ export default {
         this.course.dateInfo.recurrencePattern = 'weekly'
         result = await CourseService.updateCourse(null, this.course)
       }
-
-      if (result.error) {
-        this.$emit('error', result.message)
-      } else {
-        this.$emit('success', result.message || 'Kurstermin erfolgreich aktualisiert.')
-      }
+      this.isLoading = false
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+      if (!result.error) this.$emit('success')
     },
   },
   computed: {
     ...mapState(useCourseStore, ['weekRange', 'courses']),
     recurringCourse() {
       return this.originalCourse.dateInfo.recurrencePattern === 'weekly'
+    },
+  },
+  watch: {
+    course: {
+      handler() {
+        this.disableButton = false
+      },
+      deep: true,
     },
   },
 }

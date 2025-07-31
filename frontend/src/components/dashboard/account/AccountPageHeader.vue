@@ -1,8 +1,8 @@
 <template>
   <PageHeader :heading="heading">
     <template #actions>
-      <base-button variant="light" @click="goToAddUserPage">
-        <font-awesome-icon class="btn-icon" icon="fa-solid fa-plus"></font-awesome-icon>
+      <base-button variant="delete" @click="goToAddUserPage">
+        <font-awesome-icon class="btn-icon" icon="fa-solid fa-user-plus"></font-awesome-icon>
         Konto
       </base-button>
     </template>

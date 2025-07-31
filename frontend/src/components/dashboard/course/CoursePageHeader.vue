@@ -1,7 +1,7 @@
 <template>
   <PageHeader :heading="heading">
     <template #actions>
-      <base-button variant="light" @click="goToAddCoursePage">
+      <base-button variant="delete" @click="goToAddCoursePage">
         <font-awesome-icon class="btn-icon" icon="fa-solid fa-calendar-plus"></font-awesome-icon>
         Kurstermin
       </base-button>

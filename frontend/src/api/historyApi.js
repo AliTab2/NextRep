@@ -1,5 +1,4 @@
-const BASE_URL = 'https://nextrep-gjus.onrender.com/api/history'
-// const BASE_URL = 'http://localhost:3000/api/history'
+const BASE_URL = import.meta.env.VITE_HISTORY_BASE_URL
 
 export async function getAllHistory() {
   const res = await fetch(BASE_URL)

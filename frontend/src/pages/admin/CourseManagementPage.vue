@@ -1,7 +1,7 @@
 <template>
   <div>
-    <BaseMessage v-if="statusMessage" :status="statusType" :key="Date.now()">
-      {{ statusMessage }}
+    <BaseMessage v-if="courseMessage.msg" :status="courseMessage.status" :key="Date.now()">
+      {{ courseMessage.msg }}
     </BaseMessage>
 
     <transition name="fade-slide" mode="out-in">
@@ -12,7 +12,6 @@
         :exception-today="exceptionToday"
         @edit="viewMode = 'edit'"
         @success="handleSuccess"
-        @error="handleError"
       />
     </transition>
   </div>
@@ -25,7 +24,8 @@ import CourseInfoView from '@/components/course/CourseInfoView.vue'
 import { usePermission } from '@/composables/usePermission.js'
 import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 import useCourseStore from '@/stores/courseStore'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
+import useMessageStore from '@/stores/messageStore'
 
 export default {
   components: {
@@ -54,7 +54,6 @@ export default {
       return
     }
 
-    // this.viewMode = this.$route.name === 'AdminCourseEdit' ? 'edit' : 'info'
     this.course = this.courses.find((c) => c._id.toString() === courseId.toString())
 
     const exceptionDate = this.$route.query.exceptionDate
@@ -67,8 +66,13 @@ export default {
       })
     }
   },
+  mounted() {
+    this.clearMessage('course')
+  },
+
   computed: {
     ...mapState(useCourseStore, ['courses']),
+    ...mapState(useMessageStore, { courseMessage: 'course' }),
     currentComponent() {
       return {
         info: CourseInfoView,
@@ -78,19 +82,11 @@ export default {
     },
   },
   methods: {
-    clearMessage() {
-      this.statusMessage = ''
-      this.statusType = ''
-    },
-    handleError(msg) {
-      this.clearMessage()
-      this.statusMessage = msg
-      this.statusType = 'error'
-    },
-    handleSuccess(msg) {
+    ...mapActions(useMessageStore, ['clearMessage']),
+    handleSuccess() {
       this.navigate({
         mode: 'push',
-        to: { name: 'Calendar', query: { status: 'success', message: msg } },
+        to: { name: 'Calendar' },
       })
     },
   },

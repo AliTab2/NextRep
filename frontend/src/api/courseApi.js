@@ -1,5 +1,4 @@
-const BASE_URL = 'https://nextrep-gjus.onrender.com/api/courses'
-// const BASE_URL = 'http://localhost:3000/api/courses'
+const BASE_URL = import.meta.env.VITE_COURSE_BASE_URL
 
 export async function getAllCourses() {
   const res = await fetch(BASE_URL)

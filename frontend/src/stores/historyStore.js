@@ -7,48 +7,50 @@ import {
 } from '@/api/historyApi.js'
 import { handleApiResponse, buildErrorResponse } from '@/api/on.js'
 import useUserStore from '@/stores/userStore.js'
+import useMessageStore from './messageStore'
 
-export const useHistoryStore = defineStore('history', {
+const useHistoryStore = defineStore('history', {
   state: () => ({
     history: [],
-    loading: false,
   }),
   getters: {
     userId: () => useUserStore().user.id,
+    messageStore: () => useMessageStore(),
   },
   actions: {
     async fetchAllHistory() {
-      this.loading = true
       try {
         const res = await getAllHistory()
-        const result = await handleApiResponse(res, 'Fehler beim Laden der Verlauf')
-        if (!result.error) {
-          this.history = result.data
+        const result = await handleApiResponse(res, 'Verlauf Laden fehlgeschlagen')
+        if (result.error) {
+          this.setError(result.message)
+          return result
         }
+
+        this.history = result.data
         return result
       } catch (err) {
-        console.error('Fehler beim Laden der Verlauf:', err)
+        console.error('Verlauf Laden fehlgeschlagen:', err)
+        this.setError('Ein Fehler ist aufgetreten')
         return buildErrorResponse()
-      } finally {
-        this.loading = false
       }
     },
 
     async fetchUserHistory(id) {
-      this.loading = true
       try {
-        const userId = id ? id : useUserStore().user.id
+        const userId = id ?? useUserStore().user.id
         const res = await getUserHistory(userId)
-        const result = await handleApiResponse(res, 'Fehler beim Laden der Nutzer-Verlauf')
-        if (!result.error) {
-          this.history = result.data
+        const result = await handleApiResponse(res, 'Verlauf Laden fehlgeschlagen')
+        if (result.error) {
+          this.setError(result.message)
+          return result
         }
+        this.history = result.data
         return result
       } catch (err) {
-        console.error('Fehler beim Laden der Nutzer-Verlauf:', err)
+        console.error('Verlauf Laden fehlgeschlagen:', err)
+        this.setError('Ein Fehler ist aufgetreten')
         return buildErrorResponse()
-      } finally {
-        this.loading = false
       }
     },
 
@@ -59,6 +61,7 @@ export const useHistoryStore = defineStore('history', {
         return result
       } catch (err) {
         console.error('Fehler beim Speichern des Verlauf-Eintrags:', err)
+        this.setError('Ein Fehler ist aufgetreten')
         return buildErrorResponse()
       }
     },
@@ -66,12 +69,26 @@ export const useHistoryStore = defineStore('history', {
     async sendNotification({ group, notifications }) {
       try {
         const res = await sendNotification({ group, notifications, userId: this.userId })
-        const result = await handleApiResponse(res, 'Fehler beim Senden der Nachrichten:')
+        const result = await handleApiResponse(res, 'Nachrichten Senden fehlgeschlagen')
+        if (result.error) {
+          this.setError(result.message)
+          return result
+        }
+        this.setSuccess('Nachrichten erfolgreich gesendet')
         return result
       } catch (err) {
-        console.error('Fehler beim Senden der Nachrichten:', err)
+        console.error('Nachrichten Senden fehlgeschlagen:', err)
+        this.setError('Ein Fehler ist aufgetreten')
         return buildErrorResponse()
       }
     },
+    setError(msg) {
+      this.messageStore.setMessage('history', 'error', msg)
+    },
+    setSuccess(msg) {
+      this.messageStore.setMessage('history', 'success', msg)
+    },
   },
 })
+
+export default useHistoryStore

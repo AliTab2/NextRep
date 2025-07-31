@@ -1,5 +1,4 @@
-const BASE_URL = 'https://nextrep-gjus.onrender.com/api/users'
-// const BASE_URL = 'http://localhost:3000/api/users'
+const BASE_URL = import.meta.env.VITE_USER_BASE_URL
 
 export async function getAllUsers(userId) {
   const res = await fetch(BASE_URL, {

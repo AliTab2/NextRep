@@ -1,6 +1,6 @@
 <template>
-  <BaseMessage v-if="statusMessage" :status="statusType">
-    {{ statusMessage }}
+  <BaseMessage v-if="courseMessage.msg" :status="courseMessage.status">
+    {{ courseMessage.msg }}
   </BaseMessage>
   <ul class="calendar-events">
     <li
@@ -9,7 +9,7 @@
       class="calendar-events__day"
       @click="exportDay($event, dayCourses[0])"
     >
-      <BaseLoader v-if="isLoading" />
+      <BaseLoader v-if="isLoadingCourses" />
       <transition-group name="slide">
         <EventCard v-for="course in dayCourses" :key="course._id" :course="course" />
       </transition-group>
@@ -34,7 +34,8 @@ import EventCard from '@/components/shared/EventCard.vue'
 import ScreenshotDisplay from '@/components/course/ScreenshotDisplay.vue'
 import useCourseStore from '@/stores/courseStore.js'
 import { getDateFromWeekRange } from '@/utils/calendar'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
+import useMessageStore from '@/stores/messageStore'
 
 export default {
   components: {
@@ -55,44 +56,44 @@ export default {
     }
   },
   computed: {
-    ...mapState(useCourseStore, [
-      'isLoading',
-      'statusMessage',
-      'statusType',
-      'weekRange',
-      'isExporting',
-      'exportNote',
-    ]),
+    ...mapState(useCourseStore, ['isLoadingCourses', 'weekRange', 'isExporting', 'exportNote']),
+    ...mapState(useMessageStore, { courseMessage: 'course' }),
   },
   methods: {
+    ...mapActions(useCourseStore, ['updateStateValue']),
     async exportDay(event, course) {
-      const courseStore = useCourseStore()
       if (!this.isExporting || !course) {
-        courseStore.isExporting = false
+        this.updateStateValue('isExporting', false)
         return
       }
+
       this.takeScreenshot = true
       await nextTick()
+
       const day = event.target.closest('.calendar-events__day')
       if (!day) {
-        console.warn('No day fonud!')
+        console.warn('No day found!')
         return
       }
-      const clondedDay = day.cloneNode(true)
+
+      const clonedDay = day.cloneNode(true)
       const screenshotContainer = this.$refs.screenshotContainer.$el
       const screenshotContentContainer = Array.from(screenshotContainer.children).find((child) =>
         child.className.includes('screenshot-content'),
       )
-      clondedDay.style.flexDirection = 'row'
-      clondedDay.style.border = '0px'
-      clondedDay.style.width = getComputedStyle(screenshotContentContainer).width
-      for (const course of clondedDay.children) {
+
+      clonedDay.style.flexDirection = 'row'
+      clonedDay.style.border = '0px'
+      clonedDay.style.width = getComputedStyle(screenshotContentContainer).width
+
+      for (const course of clonedDay.children) {
         course.style.backgroundColor = 'white'
         if (window.innerWidth < 900) {
           course.firstChild.firstChild.style.fontSize = '1rem'
         }
       }
-      screenshotContentContainer.append(clondedDay)
+
+      screenshotContentContainer.append(clonedDay)
 
       this.screenshotDate = getDateFromWeekRange(
         this.weekRange.start,
@@ -102,19 +103,22 @@ export default {
         month: '2-digit',
         year: 'numeric',
       })
+
       this.screenshotDay = weekDays.find(
         (day) => day.value.toString() === course.dateInfo.dayIndex.toString(),
       ).label
-      htmlToImage
-        .toPng(screenshotContainer)
-        .then((dataUrl) => {
-          download(dataUrl, `${Date.now()}.png`)
-          courseStore.isExporting = false
-          this.takeScreenshot = false
-        })
-        .catch((error) => {
-          console.error('Export fehlgeschlagen:', error)
-        })
+
+      await new Promise((r) => setTimeout(r, 500))
+
+      try {
+        const dataUrl = await htmlToImage.toPng(screenshotContainer, { cacheBust: true })
+        download(dataUrl, `NextRep_${this.screenshotDate}.png`)
+      } catch (error) {
+        console.error('Export fehlgeschlagen:', error)
+      } finally {
+        this.updateStateValue('isExporting', false)
+        this.takeScreenshot = false
+      }
     },
   },
 }
@@ -141,17 +145,14 @@ export default {
   transition: all 0.2s;
 }
 
-/* Slide Animation */
 .slide-enter-active,
 .slide-leave-active {
   transition: all 0.4s ease;
 }
-
 .slide-enter-from {
   opacity: 0;
   transform: translateX(100%);
 }
-
 .slide-leave-to {
   opacity: 0;
   transform: translateX(-100%);

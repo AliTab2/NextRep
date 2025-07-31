@@ -109,7 +109,7 @@ export default {
 
 .bio-box {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1.5;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -167,7 +167,6 @@ export default {
 }
 
 .bio-text {
-  /* color: #000; */
   font-size: 1.2rem;
 }
 

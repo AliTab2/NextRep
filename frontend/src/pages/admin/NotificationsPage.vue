@@ -5,12 +5,12 @@
         :selected-notifications-count="selectedNotificationsCount"
         @confirm-notification="confirmNotification"
       />
-      <BaseMessage v-if="statusMessage" :status="statusType">
-        {{ statusMessage }}
+      <BaseMessage v-if="historyMessage.msg" :status="historyMessage.status" :key="Date.now()">
+        {{ historyMessage.msg }}
       </BaseMessage>
     </template>
     <template #main>
-      <DataSection :not-found="notFound" not-found-item="Mitteilungen" :key="componentKey">
+      <DataSection :not-found="notFound" not-found-item="Mitteilungen">
         <template #list-item>
           <NotificationListItem
             v-for="entry in notifications"
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { useHistoryStore } from '@/stores/historyStore'
+import useHistoryStore from '@/stores/historyStore'
 import { usePermission } from '@/composables/usePermission.js'
 import { mapActions, mapState } from 'pinia'
 import CourseLogMessage from '@/models/CourseLogMessage'
@@ -43,6 +43,7 @@ import NotificationPageHeader from '@/components/dashboard/notification/Notifica
 import DataSection from '@/components/dashboard/ui/DataSection.vue'
 import NotificationListItem from '@/components/dashboard/notification/NotificationListItem.vue'
 import NotificationModal from '@/components/dashboard/notification/NotificationModal.vue'
+import useMessageStore from '@/stores/messageStore'
 
 export default {
   components: {
@@ -51,6 +52,12 @@ export default {
     DataSection,
     NotificationListItem,
     NotificationModal,
+  },
+  mounted() {
+    this.clearMessage('history')
+  },
+  beforeUnmount() {
+    this.clearMessage('history')
   },
   data() {
     return {
@@ -62,7 +69,6 @@ export default {
       selectedGroupe: 'main',
       statusMessage: '',
       statusType: '',
-      componentKey: 0,
     }
   },
   setup() {
@@ -70,11 +76,7 @@ export default {
     return { hasPermission }
   },
   async created() {
-    if (this.hasPermission('view:all-history')) {
-      this.error = (await this.fetchAllHistory()).error
-    } else {
-      this.error = (await this.fetchUserHistory()).error
-    }
+    await this.loadNotifications()
 
     const filteredEntries = this.history.filter((e) => {
       return e.action !== 'login' && e.sent !== true
@@ -87,11 +89,10 @@ export default {
       action: entry.action,
       log: new CourseLogMessage(entry.course, entry.action),
     }))
-
-    this.isLoading = false
   },
   methods: {
     ...mapActions(useHistoryStore, ['fetchAllHistory', 'fetchUserHistory', 'sendNotification']),
+    ...mapActions(useMessageStore, ['clearMessage']),
     confirmNotification() {
       this.showNotificationModal = true
     },
@@ -101,18 +102,21 @@ export default {
         group: this.selectedGroupe,
         notifications: this.readyToSend,
       })
-      if (result.error) {
-        this.statusMessage = 'Nachrichten Senden fehlgeschlagen. Bitte versuchen Sie nochmal.'
-        this.statusType = 'error'
+      if (!result.error) await this.loadNotifications()
+    },
+    async loadNotifications() {
+      this.isLoading = true
+      if (this.hasPermission('view:all-history')) {
+        this.error = (await this.fetchAllHistory()).error
       } else {
-        this.statusMessage = 'Nachrichten erfolgreicht gesendet.'
-        this.statusType = 'success'
-        this.componentKey++
+        this.error = (await this.fetchUserHistory()).error
       }
+      this.isLoading = false
     },
   },
   computed: {
     ...mapState(useHistoryStore, ['history']),
+    ...mapState(useMessageStore, { historyMessage: 'history' }),
     selectedNotificationsCount() {
       return this.selectedNotifications.length
     },

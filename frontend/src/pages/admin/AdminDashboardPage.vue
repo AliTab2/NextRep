@@ -1,13 +1,25 @@
 <template>
   <div class="admin-dashboard">
-    <OptionCard
-      v-for="option in options"
-      :key="option.label"
-      :icon="option.icon"
-      :label="option.label"
-      @click="option.action"
-      :superadmin-only="option.superadminOnly"
-    />
+    <div class="dashboard-greeting">
+      <BaseMessage
+        v-if="showGreeting"
+        status="warning"
+        @click="showGreeting = false"
+        :auto-close="false"
+        >Wilkommen zurück, Ali
+        <font-awesome-icon icon="fa-solid fa-face-grin-stars" />
+      </BaseMessage>
+    </div>
+    <div class="dashboard-cards">
+      <OptionCard
+        v-for="option in options"
+        :key="option.label"
+        :icon="option.icon"
+        :label="option.label"
+        @click="option.action"
+        :superadmin-only="option.superadminOnly"
+      />
+    </div>
   </div>
 </template>
 
@@ -26,6 +38,7 @@ export default {
   },
   data() {
     return {
+      showGreeting: true,
       options: [
         {
           icon: 'fa-solid fa-paper-plane',
@@ -51,7 +64,7 @@ export default {
         {
           icon: 'fa-solid fa-person-running',
           label: 'Sportarten',
-          action: this.navigate.bind(this, { mode: 'push', to: { name: 'ComingSoon' } }),
+          action: this.navigate.bind(this, { mode: 'push', to: { name: 'Sport' } }),
         },
         {
           icon: 'fa-solid fa-receipt',
@@ -67,6 +80,13 @@ export default {
 <style scoped>
 .admin-dashboard {
   padding: 4rem;
+}
+
+.dashboard-greeting {
+  margin-bottom: 4rem;
+}
+
+.dashboard-cards {
   display: flex;
   justify-content: center;
   gap: 2rem;

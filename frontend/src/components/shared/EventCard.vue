@@ -1,10 +1,17 @@
 <template>
-  <article :class="['event-card', `${statusClass}--border`]" @click="goToCourseManagementPage()">
+  <article
+    :class="['event-card', `${statusClass}--bg`, `${statusClass}--border`]"
+    @click="goToCourseManagementPage()"
+  >
     <header class="event-card__header">
-      <p class="event-card__sport" :style="{ color: coursesWidgetsList[course.sport].color }">
+      <p
+        class="event-card__sport"
+        :style="{
+          color: sports.find((s) => s.sport.toLowerCase() === course.sport.toLowerCase())?.color,
+        }"
+      >
         {{ course.sport }}
       </p>
-      <!-- <p class="event-card__release">Release {{ course.release }}</p> -->
     </header>
     <p class="event-card__trainer">{{ trainer }}</p>
     <p class="event-card__time">{{ getStartTime }} - {{ getEndTime }}</p>
@@ -19,6 +26,7 @@ import { useSmartNavigation } from '@/composables/useSmartNavigation.js'
 import useCourseStore from '@/stores/courseStore'
 import { mapState } from 'pinia'
 import { coursesWidgetsList } from '@/utils/base'
+import useSportStore from '@/stores/sportStore'
 
 export default {
   setup() {
@@ -50,6 +58,7 @@ export default {
   },
   computed: {
     ...mapState(useCourseStore, ['isExporting']),
+    ...mapState(useSportStore, ['sports']),
     trainer() {
       return this.course.trainer.map((t) => t.name).join(', ')
     },
@@ -93,7 +102,6 @@ export default {
   justify-content: space-between;
   transition: opacity 0.25s;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.25s;
   font-size: 0.9rem;
@@ -126,15 +134,18 @@ export default {
 
 .status-represent--text {
   color: var(--color-status-represent);
+  font-weight: bold;
 }
 .status-regular--text {
   color: var(--color-status-regular);
 }
 .status-change--text {
   color: var(--color-status-change);
+  font-weight: bold;
 }
 .status-cancelled--text {
   color: var(--color-status-cancelled);
+  font-weight: bold;
 }
 .status-special--text {
   color: var(--color-status-special);
@@ -154,6 +165,6 @@ export default {
   border-left: var(--border-status-cancelled);
 }
 .status-special--border {
-  border: var(--border-status-special);
+  border-left: var(--border-status-special);
 }
 </style>

@@ -3,8 +3,9 @@
     <div class="app-header__container">
       <NavBrand />
       <WeekNavigator v-if="showCalNav" @update="updateMonthAndYear" />
-      <NavDate :month-and-year="monthAndYear" />
+      <NavDate v-if="isCalendarPage" :month-and-year="monthAndYear" />
       <UserSection
+        class="user-section"
         @open-export-modal="showExportModal = true"
         @open-view-modal="showViewModal = true"
       />
@@ -70,24 +71,23 @@ export default {
   },
   methods: {
     ...mapActions(useUserStore, ['logout']),
+    ...mapActions(useCourseStore, ['updateStateValue']),
     updateMonthAndYear(date) {
       this.monthAndYear = date
     },
     exportDay() {
       this.showExportModal = false
-      const courseStore = useCourseStore()
-      courseStore.isExporting = true
-      courseStore.exportNote = this.exportNote
+      this.updateStateValue('isExporting', true)
+      this.updateStateValue('exportNote', this.exportNote)
     },
     cancelExport() {
       this.showExportModal = false
-      const courseStore = useCourseStore()
-      courseStore.isExporting = false
+      this.updateStateValue('isExporting', false)
     },
     changeCalendarView() {
       localStorage.setItem('calendar-view', this.calendarView)
       this.showViewModal = false
-      useCourseStore().calendarView = this.calendarView
+      this.updateStateValue('calendarView', this.calendarView)
     },
   },
   computed: {
@@ -106,21 +106,34 @@ export default {
 
 <style scoped>
 .app-header {
-  background-color: var(--color-bg);
   width: 100%;
+  background-color: var(--color-bg);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid var(--color-text);
+  user-select: none;
 }
 .app-header__container {
   height: 7rem;
   padding: 0 1rem;
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  /* flex-wrap: wrap; */
+  gap: 1rem;
 }
-
+.user-section {
+  margin-left: auto;
+}
+@media (min-width: 576px) {
+  .app-header__container {
+    gap: 2rem;
+  }
+}
+@media (min-width: 768px) {
+  .app-header__container {
+    gap: 3rem;
+  }
+}
 @media (min-width: 1280px) {
   .app-header__title,
   .user-icon {

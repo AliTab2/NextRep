@@ -9,7 +9,7 @@
     <DropdownButton
       label="Einstellungen"
       @click="navigate({ mode: 'push', to: { name: 'AdminDashboard' } })"
-      :visible="hasPermission('access:settings')"
+      :visible="hasPermission('access:settings') && !isDashboardPage"
       icon="fa-solid fa-gear"
     />
     <DropdownButton
@@ -25,12 +25,6 @@
       icon="fa-regular fa-calendar-days"
     />
     <DropdownButton
-      label="Anmelden"
-      @click="navigate({ mode: 'push', to: { name: 'Auth' } })"
-      :visible="showLoginButton"
-      icon="fa-solid fa-arrow-right-to-bracket"
-    />
-    <DropdownButton
       label="Exportieren"
       :visible="isCalendarPage && isLoggedIn"
       @click="$emit('open-export-modal')"
@@ -41,6 +35,12 @@
       :visible="isCalendarPage"
       @click="$emit('open-view-modal')"
       icon="fa-solid fa-expand"
+    />
+    <DropdownButton
+      label="Anmelden"
+      @click="navigate({ mode: 'push', to: { name: 'Auth' } })"
+      :visible="showLoginButton"
+      icon="fa-solid fa-arrow-right-to-bracket"
     />
     <DropdownButton
       label="Abmelden"
@@ -88,6 +88,9 @@ export default {
     },
     isAuthPage() {
       return this.$route.name.includes('Auth')
+    },
+    isDashboardPage() {
+      return this.$route.name.includes('Dashboard')
     },
     showAddCourseButton() {
       return (

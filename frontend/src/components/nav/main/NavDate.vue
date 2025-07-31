@@ -15,28 +15,19 @@ export default {
 
 <style scoped>
 .app-header__date {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: var(--color-text);
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  margin-bottom: 0;
 }
 
 /* Media Queries */
 @media (min-width: 576px) {
   .app-header__date {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
   }
 }
 @media (min-width: 768px) {
   .app-header__date {
-    font-size: 1.4rem;
-  }
-}
-@media (min-width: 1024px) {
-  .app-header__date {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
 }
 </style>

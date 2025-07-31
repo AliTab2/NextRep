@@ -1,7 +1,7 @@
 <template>
   <PageHeader :heading="heading">
     <template #actions>
-      <base-button variant="light" @click="$emit('confirm-notification')" :disabled="!canSend">
+      <base-button variant="delete" @click="$emit('confirm-notification')" :disabled="!canSend">
         <font-awesome-icon class="btn-icon" icon="fa-solid fa-paper-plane"></font-awesome-icon>
         Senden
       </base-button>

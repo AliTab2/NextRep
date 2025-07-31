@@ -2,6 +2,9 @@
   <PageContainer :is-loading="isLoading">
     <template #header>
       <CoursePageHeader />
+      <BaseMessage v-if="course.msg" :status="course.status" :key="Date.now()">
+        {{ course.msg }}
+      </BaseMessage>
     </template>
     <template #main>
       <DataSection :not-found="notFound" not-found-item="Kurstermine">
@@ -21,6 +24,7 @@ import PageContainer from '@/components/dashboard/ui/PageContainer.vue'
 import CoursePageHeader from '@/components/dashboard/course/CoursePageHeader.vue'
 import DataSection from '@/components/dashboard/ui/DataSection.vue'
 import CourseListItem from '@/components/dashboard/course/CourseListItem.vue'
+import useMessageStore from '@/stores/messageStore'
 
 export default {
   components: {
@@ -35,6 +39,12 @@ export default {
     return {
       hasPermission,
     }
+  },
+  mounted() {
+    this.clearMessage('course')
+  },
+  beforeUnmount() {
+    this.clearMessage('course')
   },
   data() {
     return {
@@ -52,12 +62,14 @@ export default {
   },
   computed: {
     ...mapState(useCourseStore, ['courses']),
+    ...mapState(useMessageStore, ['course']),
     notFound() {
       return Boolean(this.courses.length) === false || this.error
     },
   },
   methods: {
     ...mapActions(useCourseStore, ['getUserCourses', 'getAllCourses']),
+    ...mapActions(useMessageStore, ['clearMessage']),
   },
 }
 </script>

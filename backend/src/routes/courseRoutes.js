@@ -43,7 +43,7 @@ router.get("/user", async (req, res) => {
         const isExceptionTrainer = ex.trainer?.some(
           (t) => t.toString() === userId
         );
-        if (isExceptionTrainer) {
+        if (isExceptionTrainer && ex.status !== "deleted") {
           relevant.push(ex);
         }
       }

@@ -100,12 +100,14 @@ export default {
         return
       }
       this.course.dateInfo.creationWeekRange = this.weekRange
+      this.isLoading = true
       const result = await CourseService.addCourse(this.course)
-      if (result.error) {
-        this.$emit('error', result.message)
-      } else {
-        this.$emit('success', result.message || 'Kurstermin erfolgreich hinzugefügt.')
-      }
+      this.isLoading = false
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+      if (!result.error) this.$emit('success')
     },
   },
   computed: {

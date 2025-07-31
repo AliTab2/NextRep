@@ -147,17 +147,20 @@ const recurrenceLabel = {
   align-items: center;
 }
 
-.status-represent--text {
-  color: var(--color-status-represent);
-}
 .status-regular--text {
   color: var(--color-status-regular);
 }
+.status-represent--text {
+  color: var(--color-status-represent);
+  font-weight: bold;
+}
 .status-change--text {
-  color: var(--color-status-text);
+  color: var(--color-status-change);
+  font-weight: bold;
 }
 .status-cancelled--text {
   color: var(--color-status-cancelled);
+  font-weight: bold;
 }
 .status-special--text {
   color: var(--color-status-special);

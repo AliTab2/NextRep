@@ -50,6 +50,9 @@ import {
   faFileLines,
   faFileExcel,
   faFileCsv,
+  faCircleArrowLeft,
+  faCircleArrowRight,
+  faFaceGrinStars,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faCalendarDays } from '@fortawesome/free-regular-svg-icons'
@@ -106,6 +109,9 @@ library.add(
   faFileLines,
   faFileExcel,
   faFileCsv,
+  faCircleArrowLeft,
+  faCircleArrowRight,
+  faFaceGrinStars,
 )
 import App from '@/App.vue'
 import router from '@/router/router.js'

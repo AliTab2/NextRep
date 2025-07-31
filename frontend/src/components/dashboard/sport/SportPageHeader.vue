@@ -1,9 +1,9 @@
 <template>
-  <PageHeader heading="Abrechnungen">
+  <PageHeader heading="Sportarten">
     <template #actions>
-      <base-button variant="delete" @click="$emit('generate-billing')" :disabled="buttonDisabled">
-        <font-awesome-icon icon="fa-solid fa-file-csv" class="btn-icon" />
-        Erstellen
+      <base-button :disabled="buttonDisabled" variant="delete" @click="$emit('add-sport')">
+        <font-awesome-icon class="btn-icon" icon="fa-solid fa-plus"></font-awesome-icon>
+        Sportart
       </base-button>
     </template>
   </PageHeader>
@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .btn-icon {
   margin-right: 1rem;
 }

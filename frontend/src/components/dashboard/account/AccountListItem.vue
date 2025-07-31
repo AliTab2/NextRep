@@ -49,7 +49,7 @@ export default {
     },
     statusColor() {
       if (this.isBlocked) return 'var(--color-primary)'
-      return 'lightgreen'
+      return 'var(--color-text)'
     },
   },
 }

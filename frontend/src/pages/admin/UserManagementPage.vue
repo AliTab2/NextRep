@@ -1,7 +1,7 @@
 <template>
   <div>
-    <BaseMessage v-if="statusMessage" :status="statusType" :key="Date.now()">
-      {{ statusMessage }}
+    <BaseMessage v-if="userMessage.msg" :status="userMessage.status" :key="Date.now()">
+      {{ userMessage.msg }}
     </BaseMessage>
     <PageSplitView
       v-if="hasPermission('edit:admin')"
@@ -17,7 +17,6 @@
           :screen-is-large="screenIsLarge"
           @switch-to-form="handleCardSwitch"
           @success="handleSuccess"
-          @error="handleError"
         />
       </template>
 
@@ -28,7 +27,6 @@
           :editable-user="userAccount"
           :show-cancel-button="true"
           @success="handleSuccess"
-          @error="handleError"
         />
       </template>
     </PageSplitView>
@@ -47,6 +45,7 @@ import { mapState, mapActions } from 'pinia'
 import useUserStore from '@/stores/userStore.js'
 import { userFormat } from '@/utils/base.js'
 import PageSplitView from '@/components/shared/PageSplitView.vue'
+import useMessageStore from '@/stores/messageStore'
 
 export default {
   components: {
@@ -69,6 +68,9 @@ export default {
       statusType: '',
     }
   },
+  unmounted() {
+    this.clearMessage('user')
+  },
   async created() {
     const userId = this.$route.params.userId
     if (userId) {
@@ -86,31 +88,25 @@ export default {
   },
   methods: {
     ...mapActions(useUserStore, ['getOneUser']),
+    ...mapActions(useMessageStore, ['clearMessage']),
     updateUser(user) {
       this.userAccount = { ...user }
     },
     handleCardSwitch() {
       this.$refs.splitRef?.handleSwitch?.()
     },
-    clearMessage() {
-      this.statusMessage = ''
-      this.statusType = ''
-    },
-    handleSuccess(message) {
-      this.clearMessage()
-      this.navigate({
-        mode: 'push',
-        to: { name: 'AdminAccounts', query: { status: 'success', message } },
-      })
-    },
-    handleError(message) {
-      this.clearMessage()
-      this.statusMessage = message
-      this.statusType = 'error'
+    handleSuccess() {
+      setTimeout(() => {
+        this.navigate({
+          mode: 'push',
+          to: { name: 'AdminAccounts' },
+        })
+      }, 2000)
     },
   },
   computed: {
     ...mapState(useUserStore, ['users', 'user']),
+    ...mapState(useMessageStore, { userMessage: 'user' }),
   },
 }
 </script>

@@ -1,14 +1,17 @@
 <template>
   <div class="calendar-nav app-header__calendar-nav">
-    <button class="calendar-nav__button" @click="moveOneWeek('back')">
-      <span v-html="back"></span>
-    </button>
-
-    <span class="calendar-nav__range">{{ getWeekRange }}</span>
-
-    <button class="calendar-nav__button" @click="moveOneWeek('forward')">
-      <span v-html="forward"></span>
-    </button>
+    <font-awesome-icon
+      class="circle-arrow-icon"
+      @click="moveOneWeek('back')"
+      size="2xl"
+      icon="fa-solid fa-circle-arrow-left"
+    />
+    <font-awesome-icon
+      class="circle-arrow-icon"
+      @click="moveOneWeek('forward')"
+      size="2xl"
+      icon="fa-solid fa-circle-arrow-right"
+    />
   </div>
 </template>
 
@@ -64,7 +67,6 @@ export default {
   },
   computed: {
     ...mapState(useCourseStore, ['courses', 'weekRange']),
-
     getWeekRange() {
       return calcWeekRange(this.baseStartDate, this.weekOffset, formatDate)
     },
@@ -88,59 +90,15 @@ button {
 .calendar-nav {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
-.calendar-nav__button {
-  width: 2.5rem;
-  height: 2.5rem;
-  border: none;
-  border-radius: 0.75rem;
-  background-color: #db1200;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
+.circle-arrow-icon {
+  font-size: 2.5rem;
+  color: var(--color-accent);
   transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  cursor: pointer;
 }
-.calendar-nav__button:hover {
+.circle-arrow-icon:hover {
   opacity: 0.8;
-}
-.calendar-nav__range {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--color-text);
-  text-align: center;
-  padding: 0 0.5rem;
-}
-@media (min-width: 768px) {
-  .calendar-nav {
-    gap: 0.5rem;
-    padding: 0.5rem;
-  }
-  .calendar-nav__button {
-    width: 3rem;
-    height: 3rem;
-    font-size: 1.8rem;
-  }
-  .calendar-nav__range {
-    font-size: 1.4rem;
-  }
-}
-@media (min-width: 1024px) {
-  .calendar-nav__button {
-    width: 3rem;
-    height: 3rem;
-    font-size: 2rem;
-  }
-  .calendar-nav__range {
-    font-size: 1.4rem;
-  }
-}
-.app-header__calendar-nav {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
 }
 </style>
