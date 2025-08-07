@@ -23,7 +23,10 @@ export async function createBillingWorkbook(
   sheet.getCell(monthField).value = month;
 
   let latestCourseRowIndex = 0;
-  const vacationRow = (index) => sheet.getRow(latestCourseRowIndex + index);
+  const vacationRow = (index) => {
+    const internIndex = latestCourseRowIndex === 0 ? 14 : latestCourseRowIndex;
+    return sheet.getRow(internIndex + index);
+  };
 
   // courses
   courses.forEach((c, i) => {
@@ -45,6 +48,7 @@ export async function createBillingWorkbook(
     amountCell.value = c.amount;
   });
 
+  // vacations
   if (vacationDates.length > 0) {
     vacationDates.forEach((d, i) => {
       const row = vacationRow(i + 1);

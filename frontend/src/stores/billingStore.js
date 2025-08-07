@@ -11,7 +11,7 @@ const useBillingStore = defineStore('billing', {
   },
   actions: {
     async createBilling(courses, month, vacationDates) {
-      if (courses.length === 0) {
+      if (courses.length === 0 && vacationDates.length === 0) {
         this.setError('Abrechnung kann nicht erstellt werden.')
         return
       }

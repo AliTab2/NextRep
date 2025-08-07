@@ -28,7 +28,7 @@ import BillingPageHeader from '@/components/dashboard/billing/BillingPageHeader.
 import DataSection from '@/components/dashboard/ui/DataSection.vue'
 import { mapActions, mapState } from 'pinia'
 import useCourseStore from '@/stores/courseStore'
-import { subDays, addDays, getDaysInMonth, getDate, getMonth } from 'date-fns'
+import { subDays, addDays, getDaysInMonth, getDate, getMonth, getYear } from 'date-fns'
 import {
   getDateFromWeekRange,
   calcStartTime,
@@ -39,6 +39,7 @@ import {
 import useBillingStore from '@/stores/billingStore'
 import useMessageStore from '@/stores/messageStore'
 import CheckboxGroup from '@/components/shared/CheckboxGroup.vue'
+import useUserStore from '@/stores/userStore'
 
 export default {
   components: {
@@ -71,14 +72,14 @@ export default {
 
       this.isLoading = true
       const coursesResult = await this.getUserCourses()
-      if (coursesResult.error) {
+      if (coursesResult.error && this.selectedVacationDates.length === 0) {
         this.isLoading = false
         return
       }
 
       this.plannedCourseEvents = this.weeklyCourses
         .map((c) => {
-          return getAllDatesForWeeklyCourse(c)
+          return getAllDatesForWeeklyCourse(c, this.weekRange)
         })
         .flat()
 
@@ -109,7 +110,7 @@ export default {
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.download = 'NextRep-Monatsabrechnung.xlsx'
+      link.download = `${this.user.name}-NextRep-Monatsabrechnung.xlsx`
       link.click()
       window.URL.revokeObjectURL(url)
 
@@ -118,8 +119,9 @@ export default {
     },
   },
   computed: {
-    ...mapState(useCourseStore, ['courses']),
+    ...mapState(useCourseStore, ['courses', 'weekRange']),
     ...mapState(useMessageStore, ['billing', 'course']),
+    ...mapState(useUserStore, ['user']),
     vacationDates() {
       return generateRange(1, getDaysInMonth(new Date())).map((obj, i) => {
         const currYear = new Date().getFullYear()
@@ -152,13 +154,20 @@ export default {
       return this.courses.filter((c) => c.dateInfo?.recurrencePattern === 'once')
     },
     onceBillingObjects() {
-      return this.onceCourses.map((once) => {
-        const date = getDateFromWeekRange(
-          once.dateInfo?.creationWeekRange?.start,
-          once.dateInfo?.dayIndex,
-        )
-        return toBillingObj(once, date)
-      })
+      return this.onceCourses
+        .map((once) => {
+          const date = getDateFromWeekRange(
+            once.dateInfo?.creationWeekRange?.start,
+            once.dateInfo?.dayIndex,
+          )
+          const courseMonth = getMonth(date)
+          const currMonth = getMonth(new Date())
+          const courseYear = getYear(date)
+          const currYear = getYear(new Date())
+
+          if (courseMonth === currMonth && courseYear === currYear) return toBillingObj(once, date)
+        })
+        .filter((c) => c)
     },
     allExceptions() {
       return this.weeklyCourses
@@ -201,11 +210,9 @@ export default {
   },
 }
 
-export function getAllDatesForWeeklyCourse(course) {
-  const courseDate = getDateFromWeekRange(
-    course.dateInfo?.creationWeekRange?.start,
-    course.dateInfo?.dayIndex,
-  )
+export function getAllDatesForWeeklyCourse(course, weekRange) {
+  const courseDate = getDateFromWeekRange(weekRange.start, course.dateInfo?.dayIndex)
+
   const currentDay = getDate(courseDate)
   const month = getMonth(courseDate)
   const totalDaysInMonth = getDaysInMonth(courseDate)
