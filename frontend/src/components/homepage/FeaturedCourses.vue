@@ -2,7 +2,7 @@
   <SectionWrapper backgroundColor="#fff">
     <template #content>
       <h1 class="title">
-        Auf <strong style="text-decoration: underline">8 verschiedene</strong> Wege könnt ihr den
+        Auf <strong style="text-decoration: underline">9 verschiedene</strong> Wege könnt ihr den
         nächsten <strong>Rep</strong> treffen!
       </h1>
       <div class="courses-wrapper">
