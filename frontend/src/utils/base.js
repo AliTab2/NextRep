@@ -39,6 +39,7 @@ const coursesWidgets = {
   'Strength meets HIIT': { color: '#800080', icon: 'fa-solid fa-fire' },
   'Defense Männer': { color: '#000000', icon: 'fa-solid fa-shield-halved' },
   'Defense Frauen': { color: '#000000', icon: 'fa-solid fa-shield-halved' },
+  Defense: { color: '#000000', icon: 'fa-solid fa-shield-halved' },
   'HIIT Cardio': { color: '#FFA500', icon: 'fa-solid fa-bolt' },
   'HIIT Strength': { color: '#FFA500', icon: 'fa-solid fa-bolt' },
 }
@@ -76,7 +77,7 @@ const coursesHome = [
   { label: 'Balance', value: 'Body Balance' },
   { label: 'Attack', value: 'Body Attack' },
   { label: 'Strength meets HIIT', value: 'Strength meets HIIT' },
-  // { label: 'Defense', value: 'Defense' },
+  { label: 'Defense - Männer & Frauen', value: 'Defense' },
 ]
 
 const groups = [

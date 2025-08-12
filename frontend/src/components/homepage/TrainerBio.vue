@@ -34,6 +34,7 @@ import maikImg from '@/assets/imgs/admins/maik.png'
 import avaImg from '@/assets/imgs/admins/eva.png'
 import yvonneImg from '@/assets/imgs/admins/yvonne.png'
 import tiniImg from '@/assets/imgs/admins/tini.png'
+import omarImg from '@/assets/imgs/admins/omar.png'
 
 export default {
   components: {
@@ -83,6 +84,14 @@ export default {
           img: maikImg,
           courses: 'Body Pump | HIIT | Core | Strength meets HIIT',
         },
+        {
+          name: 'Omar',
+          pos: 'Trainer',
+          desc: 'Mit langjähriger Erfahrung und internationaler Anerkennung meiner Trainingsmethoden in der Selbstverteidigung, als Ehrendozent der Martial Arts Association International (MAA-I) verfüge ich über Abschlüsse als Wing Chun-Trainer. Zusätzliche Qualifikationen, sind Schwarzgurt der World Profi Kick Boxing Association (WPKA). Zudem bin ich Gründer des A.R.S. Systems (All-round-Self Défense).',
+          img: omarImg,
+          courses:
+            'MAA-I | Wing Chun Martial Arts | Chi Sao Kuen Lehrgang (5) | M.A.R.S. | Black belt by World Profi | Founder of the A.R.S. | Instructor für Anti-Amok, Anti-Terror und Anti-Panik',
+        },
       ],
     }
   },
@@ -109,7 +118,7 @@ export default {
 
 .bio-box {
   width: 100%;
-  aspect-ratio: 1 / 1.5;
+  aspect-ratio: 1 / 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -189,7 +198,7 @@ export default {
   }
   .bio-box {
     width: calc((100% - 1rem) / 2);
-    aspect-ratio: 1 / 2;
+    aspect-ratio: 1 / 2.2;
   }
 }
 @media (min-width: 768px) {
@@ -198,7 +207,7 @@ export default {
     font-size: 3rem;
   }
   .bio-box {
-    aspect-ratio: 1 / 1.5;
+    aspect-ratio: 1 / 1.75;
   }
   .bio-text {
     font-size: 1.4rem;
@@ -218,13 +227,13 @@ export default {
   }
   .bio-box {
     width: calc((100% - 2rem) / 3);
-    aspect-ratio: 1 / 2;
+    aspect-ratio: 1 / 2.3;
   }
 }
 
 @media (min-width: 1280px) {
   .bio-box {
-    aspect-ratio: 1/1;
+    aspect-ratio: 1/1.75;
   }
 }
 

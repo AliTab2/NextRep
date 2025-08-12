@@ -77,6 +77,8 @@ export default {
         return
       }
 
+      console.log('weekRange: ', this.weekRange)
+
       this.plannedCourseEvents = this.weeklyCourses
         .map((c) => {
           return getAllDatesForWeeklyCourse(c, this.weekRange)
@@ -107,12 +109,14 @@ export default {
         return
       }
 
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${this.user.name}-NextRep-Monatsabrechnung.xlsx`
-      link.click()
-      window.URL.revokeObjectURL(url)
+      console.log(this.billingCourseEvents)
+
+      // const url = window.URL.createObjectURL(blob)
+      // const link = document.createElement('a')
+      // link.href = url
+      // link.download = `${this.user.name}-NextRep-Monatsabrechnung.xlsx`
+      // link.click()
+      // window.URL.revokeObjectURL(url)
 
       this.isLoading = false
       this.selectedVacationDates = []
@@ -212,6 +216,8 @@ export default {
 
 export function getAllDatesForWeeklyCourse(course, weekRange) {
   const courseDate = getDateFromWeekRange(weekRange.start, course.dateInfo?.dayIndex)
+
+  console.log(courseDate)
 
   const currentDay = getDate(courseDate)
   const month = getMonth(courseDate)

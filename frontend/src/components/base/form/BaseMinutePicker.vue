@@ -54,7 +54,7 @@ const statusClass = computed(() => {
 })
 
 function updateValue(val) {
-  emit('update:modelValue', val ? Number(val) : '')
+  emit('update:modelValue', val && val > -1 ? Number(val) : 0)
 }
 </script>
 

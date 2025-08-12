@@ -4,6 +4,10 @@ import { generateCourseLogObj } from '@/utils/logging'
 
 export const CourseService = {
   async addCourse(course) {
+    // if (Number(course.timeInfo.minute) !== 0 && !course.timeInfo.minute) {
+    //   course.timeInfo.minute = 0
+    // }
+
     const isRecurring = course.dateInfo.recurrencePattern.includes('weekly')
     const actionKey = isRecurring ? 'add_recurring' : 'add_one'
     const logObj = generateCourseLogObj(actionKey, course)

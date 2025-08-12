@@ -75,7 +75,7 @@ watch(code, async (value) => {
   if (res.error) return
 
   setTimeout(() => {
-    router.push({ name: 'AdminDashboard' })
+    router.push({ name: 'Calendar' })
   }, 1000)
 })
 </script>
